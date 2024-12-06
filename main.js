@@ -5,7 +5,7 @@ const DB = require("./db.js");
 
 async function test_db() {
   const db = new DB();
-  return "Dados do banco de dados";
+  return await db.getAmountClients();
 }
 
 const createWindow = () => {

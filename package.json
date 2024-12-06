@@ -4,7 +4,7 @@
   "description": "BISMART versão para clientes",
   "main": "main.js",
   "scripts": {
-    "start": "electron .",
+    "start": "electron . --trace-warnings",
     "test": "test"
   },
   "repository": {
@@ -23,5 +23,8 @@
   "homepage": "https://github.com/caio-henrique2006/BiSmartClient#readme",
   "devDependencies": {
     "electron": "^33.2.1"
+  },
+  "dependencies": {
+    "mysql": "^2.18.1"
   }
 }
