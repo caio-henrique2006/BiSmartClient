@@ -1,0 +1,27 @@
+{
+  "name": "bismartclient",
+  "version": "1.0.0",
+  "description": "BISMART versão para clientes",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/caio-henrique2006/BiSmartClient.git"
+  },
+  "keywords": [
+    "bismart",
+    "background-process"
+  ],
+  "author": "Caio Henrique",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/caio-henrique2006/BiSmartClient/issues"
+  },
+  "homepage": "https://github.com/caio-henrique2006/BiSmartClient#readme",
+  "devDependencies": {
+    "electron": "^33.2.1"
+  }
+}
