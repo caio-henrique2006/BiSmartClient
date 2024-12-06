@@ -1,18 +1,20 @@
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, ipcMain } = require('electron')
 const path = require('node:path')
 const DB = require("./db.js");
 
 
-const db = new DB();
-console.log(db);
-
+async function test_db() {
+  const db = new DB();
+  return "Dados do banco de dados";
+}
 
 const createWindow = () => {
   const win = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js')
+      preload: path.join(__dirname, 'preload.js'),
+      devTools: true
     }
   })
 
@@ -20,5 +22,6 @@ const createWindow = () => {
 }
 
 app.whenReady().then(() => {
+  ipcMain.handle("test_db", test_db);
   createWindow()
 })

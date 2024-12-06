@@ -1,12 +1,5 @@
-const { contextBridge } = require('electron')
-const DB = require("./db.js")
+const { contextBridge, ipcRenderer } = require('electron/renderer');
 
-const db = new DB();
-
-contextBridge.exposeInMainWorld('versions', {
-  node: () => process.versions.node,
-  chrome: () => process.versions.chrome,
-  electron: () => process.versions.electron,
-  data: db.test()
-  // we can also expose variables, not just functions
+contextBridge.exposeInMainWorld("db", {
+    test: () => ipcRenderer.invoke('test_db')
 })
