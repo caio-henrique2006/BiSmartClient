@@ -1,4 +1,5 @@
-const mysql = require("mysql");
+const mysql = require('mysql2/promise');
+const util = require("util");
 
 class DB {
     #connection_data = {
@@ -10,23 +11,25 @@ class DB {
     #data = {};
 
     async getAmountClients() {
-        await this.#get("SELECT count(codigo) FROM cliente");
-        return this.#data;
+        const conn = await mysql.createConnection(this.#connection_data);
+        let [rows, fields] = await conn.execute("SELECT count(codigo) FROM cliente");
+        return rows;
     }
 
-    async #get(sql) {
+    #get(sql) {
         let con = mysql.createConnection(this.#connection_data);
-        con.connect(async function(err) {
+        con.connect(function(err) {
             if (err) throw err;
         });
-        con.query(sql, async (err, result, fields) => {
+        con.query(sql, (err, result, fields) => {
             this.#setData(err, result, fields);
         });
         con.end()
     }
 
-    async #setData(err, result, fields) {
+    #setData(err, result, fields) {
         if (err) throw err;
+        console.log(result);
         this.#data = result;
     }
 }

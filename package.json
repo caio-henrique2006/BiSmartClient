@@ -25,6 +25,7 @@
     "electron": "^33.2.1"
   },
   "dependencies": {
-    "mysql": "^2.18.1"
+    "mysql": "^2.18.1",
+    "mysql2": "^3.12.0"
   }
 }

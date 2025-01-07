@@ -1,3 +1,4 @@
 document.getElementById("btn").addEventListener("click", async () => {
-    console.log(await window.db.test());
+    const response = await window.db.test();
+    console.log(response);
 }) 

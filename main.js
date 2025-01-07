@@ -5,7 +5,8 @@ const DB = require("./db.js");
 
 async function test_db() {
   const db = new DB();
-  return await db.getAmountClients();
+  const response = await db.getAmountClients();
+  return response;
 }
 
 const createWindow = () => {
@@ -24,4 +25,4 @@ const createWindow = () => {
 app.whenReady().then(() => {
   ipcMain.handle("test_db", test_db);
   createWindow()
-})
+});
