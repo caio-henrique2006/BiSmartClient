@@ -3,10 +3,16 @@ const path = require('node:path')
 const DB = require("./db.js");
 
 
-async function test_db() {
+async function getLocalDBData(data_inicio, data_fim) {
   const db = new DB();
-  const response = await db.getAmountClients();
+  const response = await db.getData(data_inicio, data_fim);
   return response;
+}
+
+async function sendDataToServer(data_inicio, data_fim) {
+  const db = new DB();
+  const response = await db.getData(data_inicio, data_fim);
+  console.log(response);
 }
 
 const createWindow = () => {
@@ -22,7 +28,15 @@ const createWindow = () => {
   win.loadFile('index.html')
 }
 
+ipcMain.on('sendDataToServer', (event, data_inicio, data_fim) => {
+  sendDataToServer(data_inicio, data_fim);
+})
+
+ipcMain.handle("getLocalDBData", async (event, data_inicio, data_fim) => {
+  const response = await getLocalDBData(data_inicio, data_fim);
+  return response;
+})
+
 app.whenReady().then(() => {
-  ipcMain.handle("test_db", test_db);
   createWindow()
 });
