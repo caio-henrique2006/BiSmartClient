@@ -29,37 +29,41 @@ class DB {
         const conn = await this.#connect();
         console.log("SELECT sum(totgeral) FROM movvendas WHERE cancelada = 'N' AND emissao BETWEEN '" + data_inicio + "' AND '" + data_fim + "';");
         let [rows, fields] = await conn.query("SELECT sum(totgeral) FROM movvendas WHERE cancelada = 'N' AND emissao BETWEEN '" + data_inicio + "' AND '" + data_fim + "';");
-        return rows;
+        const response = {"valor_vendas": rows[0]["sum(totgeral)"]};
+        return response;
     }
 
     async getValorCompras(data_inicio, data_fim) {
         const conn = await this.#connect();
-        let [rows, fields] = await conn.query("SELECT SUM(totgeral) FROM MOVENT WHERE EMISSAO BETWEEN '" + data_inicio + "' AND '" + data_fim + "' AND CANCELADA !='S';");
-        return rows;
+        let [rows, fields] = await conn.query("SELECT sum(totgeral) FROM MOVENT WHERE EMISSAO BETWEEN '" + data_inicio + "' AND '" + data_fim + "' AND CANCELADA !='S';");
+        const response = {"valor_compras": rows[0]["sum(totgeral)"]};
+        return response;
     }
 
     async getQuantidadeVendas(data_inicio, data_fim) {
         const conn = await this.#connect();
         let [rows, fields] = await conn.query("SELECT count(docum) FROM movvendas WHERE cancelada = 'N' AND emissao BETWEEN '" + data_inicio + "' AND '" + data_fim + "';");
-        return rows;
+        const response = {"valor_compras": rows[0]["count(docum)"]};
+        return response;
     }
 
-    async getQuantidadeItensVendidos(data_inicio, data_fim) {
-        const conn = await this.#connect();
-        let [rows, fields] = await conn.query("SELECT COUNT(PRODUTO) FROM MOVVENDASP WHERE natoper != 5202 AND natoper != 5411 AND EMISSAO BETWEEN '" + data_inicio + "' AND '" + data_fim + "' AND DOCUM IN (SELECT DOCUM FROM MOVVENDAS WHERE CANCELADA = '' AND EMISSAO BETWEEN '" + data_inicio + "' AND '" + data_fim + "');");
-        return rows;
-    }
+    // async getQuantidadeItensVendidos(data_inicio, data_fim) {
+    //     const conn = await this.#connect();
+    //     let [rows, fields] = await conn.query("SELECT COUNT(PRODUTO) FROM MOVVENDASP WHERE natoper != 5202 AND natoper != 5411 AND EMISSAO BETWEEN '" + data_inicio + "' AND '" + data_fim + "' AND DOCUM IN (SELECT DOCUM FROM MOVVENDAS WHERE CANCELADA = '' AND EMISSAO BETWEEN '" + data_inicio + "' AND '" + data_fim + "');");
+    //     return rows;
+    // }
 
-    async getQuantidadeItensComprados(data_inicio, data_fim) {
-        const conn = await this.#connect();
-        let [rows, fields] = await conn.query("SELECT COUNT(PRODUTO) FROM MOVENTP WHERE emissao BETWEEN '" + data_inicio + "' AND '" + data_fim + "' AND DOCUM IN (SELECT DOCUM FROM MOVVENDAS WHERE CANCELADA !='S' AND EMISSAO BETWEEN '" + data_inicio + "' AND '" + data_fim + "');");
-        return rows;
-    }
+    // async getQuantidadeItensComprados(data_inicio, data_fim) {
+    //     const conn = await this.#connect();
+    //     let [rows, fields] = await conn.query("SELECT COUNT(PRODUTO) FROM MOVENTP WHERE emissao BETWEEN '" + data_inicio + "' AND '" + data_fim + "' AND DOCUM IN (SELECT DOCUM FROM MOVVENDAS WHERE CANCELADA !='S' AND EMISSAO BETWEEN '" + data_inicio + "' AND '" + data_fim + "');");
+    //     return rows;
+    // }
 
     async getTicketMedio(data_inicio, data_fim) {
         const conn = await this.#connect();
         let [rows, fields] = await conn.query("SELECT AVG(totgeral) FROM movvendas WHERE cancelada = 'N' AND emissao BETWEEN '" + data_inicio + "' AND '" + data_fim + "';");
-        return rows;
+        const response = {"ticket_medio": rows[0]["AVG(totgeral)"]};
+        return response;
     }
 
     async #connect() {
