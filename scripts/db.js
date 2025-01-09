@@ -20,7 +20,11 @@ class DB {
         const valor_compras = await this.executeSQLCommand("valor_compras", this.#SQL_commands.valor_compras, parameters);
         const quantidade_vendas = await this.executeSQLCommand("quantidade_vendas", this.#SQL_commands.quantidade_vendas, parameters);
         const ticket_medio = await this.executeSQLCommand("ticket_medio", this.#SQL_commands.ticket_medio, parameters);
-        const data = Object.assign({}, valor_vendas, valor_compras, quantidade_vendas, ticket_medio);
+        const data = Object.assign({}, valor_vendas, valor_compras, quantidade_vendas, ticket_medio, 
+            {
+                data_inicio: data_inicio, 
+                data_fim: data_fim
+            });
         return data;
     }
 

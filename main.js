@@ -1,17 +1,21 @@
 const { app, BrowserWindow, ipcMain } = require('electron')
 const path = require('node:path')
-const DB = require("./db.js");
+const DB = require("./scripts/db.js");
+const Server = require("./scripts/server.js");
 
 
 async function getLocalDBData(data_inicio, data_fim) {
   const db = new DB();
-  const response = await db.getData(data_inicio, data_fim);
-  return response;
+  const data = await db.getData(data_inicio, data_fim);
+  console.log(data);
 }
 
 async function sendDataToServer(data_inicio, data_fim) {
   const db = new DB();
-  const response = await db.getData(data_inicio, data_fim);
+  const data = await db.getData(data_inicio, data_fim);
+  console.log(data);
+  const server = new Server();
+  const response = await server.sendDataToServer(data);
   console.log(response);
 }
 
