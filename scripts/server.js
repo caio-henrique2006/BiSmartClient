@@ -9,7 +9,7 @@ class Server {
             const response = await fetch(this.#server_url + this.#server_place, {
                 method: "POST",
                 mode: "cors",
-                body: data,
+                body: JSON.stringify(data),
                 headers: {
                   "Content-type": "application/json",
                   email: this.#email,
