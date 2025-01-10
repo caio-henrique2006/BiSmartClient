@@ -5,7 +5,7 @@
   "main": "main.js",
   "scripts": {
     "start": "electron . --trace-warnings",
-    "test": "test"
+    "test": "node ./_test/_handleDate.js"
   },
   "repository": {
     "type": "git",
