@@ -1,4 +1,5 @@
 const mysql = require('mysql2/promise');
+const handleDate = require('./handleDate.js');
 
 class DB {
     #connection_data = {
@@ -15,7 +16,12 @@ class DB {
     }
 
     async getData(data_inicio, data_fim) {
-        const parameters = [data_inicio, data_fim];
+        if (handleDate.checkDate(data_inicio, data_fim)) {
+            
+        }
+    }
+
+    async fetchDataOnLocalDb(parameters) {
         const valor_vendas = await this.executeSQLCommand("valor_vendas", this.#SQL_commands.valor_vendas, parameters);
         const valor_compras = await this.executeSQLCommand("valor_compras", this.#SQL_commands.valor_compras, parameters);
         const quantidade_vendas = await this.executeSQLCommand("quantidade_vendas", this.#SQL_commands.quantidade_vendas, parameters);
