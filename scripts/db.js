@@ -17,7 +17,16 @@ class DB {
 
     async getData(data_inicio, data_fim) {
         if (handleDate.checkDate(data_inicio, data_fim)) {
-            
+            let data_arr = []
+            const list_months = handleDate.getListOfMonths(data_inicio, data_fim);
+            for (const month of list_months) {
+                console.log(month);
+                const data = await this.fetchDataOnLocalDb([month.data_inicio, month.data_fim]);
+                data_arr.push(data);
+            }
+            return data_arr;
+        } else {
+            return [];
         }
     }
 
@@ -28,8 +37,8 @@ class DB {
         const ticket_medio = await this.executeSQLCommand("ticket_medio", this.#SQL_commands.ticket_medio, parameters);
         const data = Object.assign({}, valor_vendas, valor_compras, quantidade_vendas, ticket_medio, 
             {
-                data_inicio: data_inicio, 
-                data_fim: data_fim
+                data_inicio: parameters[0], 
+                data_fim: parameters[1]
             });
         return data;
     }

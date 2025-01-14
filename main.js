@@ -5,11 +5,13 @@ const Server = require("./scripts/server.js");
 
 async function sendDataToServer(data_inicio, data_fim) {
   const db = new DB();
-  const data = await db.getData(data_inicio, data_fim);
-  console.log(data);
   const server = new Server();
-  const response = await server.sendDataToServer(data);
-  console.log(response);
+  const data_arr = await db.getData(data_inicio, data_fim);
+  console.log("array of data: ", data_arr);
+  for (const data of data_arr) {
+    const response = await server.sendDataToServer(data);
+    console.log(response);
+  }
 }
 
 const createWindow = () => {
