@@ -1,5 +1,5 @@
 class Server {
-    #email = "user_test_3@gmail.com";
+    #email = "user_test_2@gmail.com";
     #password = "123456";
     #server_url = "http://localhost:3001/";
     #server_place = "client_send";
