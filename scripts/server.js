@@ -1,8 +1,26 @@
+const fs = require("fs");
+const path = require('node:path');
+
 class Server {
-    #email = "user_test_2@gmail.com";
-    #password = "123456";
+    #email = "";
+    #password = "";
     #server_url = "http://localhost:3001/";
     #server_place = "client_send";
+
+    constructor () {
+        this.init();
+    }
+
+    async init () {
+        try {
+            const filePath = path.join(__dirname, '../db/server_login.json');
+            const data = JSON.parse(fs.readFileSync(filePath, {encoding: 'utf8'}));
+            this.#email = data.email;
+            this.#password = data.password;
+        } catch (e) {
+            throw e;
+        }
+    }
 
     async sendDataToServer(data) {
         try {

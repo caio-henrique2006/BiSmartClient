@@ -1,12 +1,14 @@
 const mysql = require('mysql2/promise');
 const handleDate = require('./handleDate.js');
+const fs = require("fs");
+const path = require('node:path');
 
 class DB {
     #connection_data = {
-        host: "localhost",
-        user: "root",
+        host: "",
+        user: "",
         password: "",
-        database: "geral"
+        database: ""
     }
     #SQL_commands = {
         valor_vendas: "SELECT sum(totgeral) FROM movvendas WHERE cancelada = 'N' AND emissao BETWEEN ? AND ?;",
@@ -15,7 +17,25 @@ class DB {
         ticket_medio: "SELECT AVG(totgeral) FROM movvendas WHERE cancelada = 'N' AND emissao BETWEEN ? AND ?;"
     }
 
+    constructor () {
+        this.init();
+    }
+
+    async init () {
+        try {
+            const filePath = path.join(__dirname, '../db/db_login.json');
+            const data = JSON.parse(fs.readFileSync(filePath, {encoding: 'utf8'}));
+            this.#connection_data.host = "localhost";
+            this.#connection_data.user = data.user;
+            this.#connection_data.password = data.password;
+            this.#connection_data.database = data.database;
+        } catch (e) {
+            throw e;
+        }
+    }
+
     async getData(data_inicio, data_fim) {
+        console.log(this.#connection_data);
         if (handleDate.checkDate(data_inicio, data_fim)) {
             let data_arr = []
             const list_months = handleDate.getListOfMonths(data_inicio, data_fim);
