@@ -4,8 +4,10 @@
   "description": "BISMART versão para clientes",
   "main": "main.js",
   "scripts": {
-    "start": "electron . --trace-warnings",
-    "test": "node ./_test/_handleDate.js"
+    "start": "electron-forge start",
+    "test": "node ./_test/_handleDate.js",
+    "package": "electron-forge package",
+    "make": "electron-forge make"
   },
   "repository": {
     "type": "git",
@@ -22,10 +24,19 @@
   },
   "homepage": "https://github.com/caio-henrique2006/BiSmartClient#readme",
   "devDependencies": {
+    "@electron-forge/cli": "^7.6.1",
+    "@electron-forge/maker-deb": "^7.6.1",
+    "@electron-forge/maker-rpm": "^7.6.1",
+    "@electron-forge/maker-squirrel": "^7.6.1",
+    "@electron-forge/maker-zip": "^7.6.1",
+    "@electron-forge/plugin-auto-unpack-natives": "^7.6.1",
+    "@electron-forge/plugin-fuses": "^7.6.1",
+    "@electron/fuses": "^1.8.0",
     "electron": "^33.2.1"
   },
   "dependencies": {
     "date-fns": "^4.1.0",
+    "electron-squirrel-startup": "^1.0.1",
     "mysql": "^2.18.1",
     "mysql2": "^3.12.0"
   }

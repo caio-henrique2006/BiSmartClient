@@ -4,7 +4,7 @@ const path = require('node:path');
 class Server {
     #email = "";
     #password = "";
-    #server_url = "http://localhost:3001/";
+    #server_url = "";
     #server_place = "client_send";
 
     constructor () {
@@ -17,6 +17,7 @@ class Server {
             const data = JSON.parse(fs.readFileSync(filePath, {encoding: 'utf8'}));
             this.#email = data.email;
             this.#password = data.password;
+            this.#server_url = data.server_url;
         } catch (e) {
             throw e;
         }

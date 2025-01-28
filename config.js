@@ -1,3 +1,19 @@
+document.getElementById("update_info").addEventListener("click", async () => {
+    const response = await window.db.invoke('getInfo', '');
+    document.getElementById("info_email").innerText = "email: ";
+    document.getElementById("info_db").innerText = "db: ";
+    document.getElementById("info_user").innerText = "user: ";
+    document.getElementById("info_server_url").innerText = "server_url: ";
+    document.getElementById("info_email").innerText += " " + response.email;
+    document.getElementById("info_db").innerText += " " + response.database;
+    document.getElementById("info_user").innerText += " " + response.user;
+    document.getElementById("info_server_url").innerText += " " + response.server_url;
+});
+
+window.onload = () => {
+    document.getElementById("update_info").click();
+};
+
 document.getElementById("submit_sendData").addEventListener("click", async () => {
     const data_inicio = document.getElementById("sendData_data_inicio").value;
     const data_fim = document.getElementById("sendData_data_fim").value;
