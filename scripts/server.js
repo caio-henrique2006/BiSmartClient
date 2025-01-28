@@ -1,3 +1,4 @@
+const { app } = require('electron');
 const fs = require("fs");
 const path = require('node:path');
 
@@ -13,7 +14,8 @@ class Server {
 
     async init () {
         try {
-            const filePath = path.join(__dirname, '../db/server_login.json');
+            const path_userData = app.getPath("userData");
+            const filePath = path.join(path_userData, 'server_login.json');
             const data = JSON.parse(fs.readFileSync(filePath, {encoding: 'utf8'}));
             this.#email = data.email;
             this.#password = data.password;

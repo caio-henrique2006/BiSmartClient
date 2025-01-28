@@ -1,5 +1,6 @@
 const { app, BrowserWindow, ipcMain } = require('electron')
 const fs = require("fs").promises;
+const { existsSync } = require("node:fs");
 const path = require('node:path')
 const DB = require("./scripts/db.js");
 const Server = require("./scripts/server.js");
@@ -16,7 +17,8 @@ async function sendDataToServer(data_inicio, data_fim) {
 }
 
 async function setLogin(email, password) {
-  const filePath = path.join(__dirname, 'db/server_login.json');
+  const path_userData = app.getPath("userData");
+  const filePath = path.join(path_userData, 'server_login.json');
   const current_server_data = JSON.parse(await fs.readFile(filePath, 'utf8'));
   const new_data = JSON.parse(JSON.stringify(current_server_data));
   new_data.email = email;
@@ -26,7 +28,8 @@ async function setLogin(email, password) {
 }
 
 async function setDBLogin(user, password, database) {
-  const filePath = path.join(__dirname, 'db/db_login.json');
+  const path_userData = app.getPath("userData");
+  const filePath = path.join(path_userData, 'db_login.json');
   const current_server_data = JSON.parse(await fs.readFile(filePath, 'utf8'));
   const new_data = JSON.parse(JSON.stringify(current_server_data));
   new_data.user = user;
@@ -50,10 +53,29 @@ const createWindow = () => {
 }
 
 ipcMain.handle('getInfo', async (event, args) => {
-  const filePath_server = path.join(__dirname, 'db/server_login.json');
-  const filePath_db = path.join(__dirname, 'db/db_login.json');
-  const server_data = JSON.parse(await fs.readFile(filePath_server, 'utf-8'));
-  const db_data = JSON.parse(await fs.readFile(filePath_db, 'utf-8'));
+  const path_userData = app.getPath("userData");
+  const storage_server_path = path.join(path_userData, 'server_login.json');
+  const storage_db_path = path.join(path_userData, 'db_login.json');
+  console.log(path_userData);
+  console.log(storage_server_path);
+  console.log(storage_db_path);
+  if(!existsSync(path_userData) || !existsSync(storage_db_path) || !existsSync(storage_server_path)) {
+    const server_data = {
+      email: "*",
+      password: "*",
+      server_url: "https://bi-smart-server.vercel.app/"
+    };
+    const db_data = {
+      user: "root",
+      password: "",
+      database: "geral"
+    };
+    await fs.writeFile(storage_server_path, JSON.stringify(server_data));
+    await fs.writeFile(storage_db_path, JSON.stringify(db_data));
+  }
+
+  const server_data = JSON.parse(await fs.readFile(storage_server_path, 'utf-8'));
+  const db_data = JSON.parse(await fs.readFile(storage_db_path, 'utf-8'));
   const response_data = { ...server_data, ...db_data};
   return response_data;
 })

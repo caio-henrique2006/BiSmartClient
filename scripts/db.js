@@ -1,3 +1,4 @@
+const { app } = require('electron');
 const mysql = require('mysql2/promise');
 const handleDate = require('./handleDate.js');
 const fs = require("fs");
@@ -23,7 +24,8 @@ class DB {
 
     async init () {
         try {
-            const filePath = path.join(__dirname, '../db/db_login.json');
+            const path_userData = app.getPath("userData");
+            const filePath = path.join(path_userData, 'db_login.json');
             const data = JSON.parse(fs.readFileSync(filePath, {encoding: 'utf8'}));
             this.#connection_data.host = "localhost";
             this.#connection_data.user = data.user;
