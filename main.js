@@ -52,6 +52,12 @@ const createWindow = () => {
   win.loadFile('index.html')
 }
 
+ipcMain.handle('getData', async (event, args) => {
+  const db = new DB();
+  const data_arr = await db.getData(args.data_inicio, args.data_fim);
+  return data_arr;
+});
+
 ipcMain.handle('getInfo', async (event, args) => {
   const path_userData = app.getPath("userData");
   const storage_server_path = path.join(path_userData, 'server_login.json');
