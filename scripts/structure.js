@@ -57,78 +57,21 @@ export default class Structure {
                 </div>
             </div>
             `;
-    this.nav_element = `
-            <div>
-                <div>
-                    <img src=${path.img_logo}>
-                </div>
-                <ul class="link_list">
-                    <a href=${path.admin_dashboard}><li>Geral</li></a>
-                    <a href=${path.admin_financeiro}><li>Financeiro</li></a>
-                    <a href=${path.admin_suporte}><li>Suporte</li></a>
-                    <a href=${path.admin_client}><li>Clientes</li></a>
-                </ul>
-            </div>
-            <div>
-                <ul class="link_list">
-                    <a href="#" class="link_icon">
-                        <img src=${path.config_icon} width="24px">
-                        <li>Configurações</li>
-                    </a>
-                    <a href="#" class="link_icon" id="user">
-                        <img src=${path.user_icon}  width="24px">
-                        <li>Usuário</li>
-                        <div class="popup" href="#" id="user_sair" style="visibility: hidden;">Sair</div>
-                    </a>
-                </ul>
-            </div>
-        `;
-    this.nav_element_client = `
-        <div>
-            <div>
-                <img src=${path.img_logo}>
-            </div>
-            <ul class="link_list">
-                <a href=${path.client_dashboard}><li>Dashboard</li></a>
-            </ul>
-        </div>
-        <div>
-            <ul class="link_list">
-                <a href="#" class="link_icon">
-                    <img src=${path.config_icon} width="24px">
-                    <li>Configurações</li>
-                </a>
-                <a href="#" class="link_icon" id="user">
-                    <img src=${path.user_icon}  width="24px">
-                    <li>Usuário</li>
-                    <div class="popup" href="#" id="user_sair" style="visibility: hidden;">Sair</div>
-                </a>
-            </ul>
-        </div>
-    `;
-    this.title_card = (title) => `
-        <div>
-            <p class="title">${title}</p>
-        </div>
-        <div class="search_date">
-            <input type="date" id="data_inicio">
-            <input type="date" id="data_fim">
-            <img src=${path.search_icon} width="28px" class="search_button" id="btn_submit">
-        </div>
-    `;
-    this.title_card_clients = (title) => `
-        <div>
-            <p class="title">${title}</p>
-        </div>
-    `;
     this.title_card_client_month = (title) => `
-        <div>
-            <p class="title">${title}</p>
+        <div class="title_card_content">
+            <div>
+                <p class="title">${title}</p>
+            </div>
+            <div class="search_date">
+                <input type="date" id="data_inicio">
+                <input type="date" id="data_fim">
+                <img src=${path.search_icon} width="28px" class="search_button" id="btn_submit">
+            </div>
         </div>
-        <div class="search_date">
-            <input type="month" id="data_inicio">
-            <input type="month" id="data_fim">
-            <img src=${path.search_icon} width="28px" class="search_button" id="btn_submit">
+        <div>
+            <a href=${path.config_path}>
+                <img src=${path.config_icon} width="28px" />
+            </a>
         </div>
     `;
   }

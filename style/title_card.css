@@ -1,11 +1,19 @@
 @import url("variable.css");
 
+.title {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
 .title_card {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  width: auto;
+  width: 100%;
   padding: 10px;
   border: 0px solid black;
   background-color: white;
@@ -37,4 +45,8 @@
 
 .title_card .search_date .search_button:hover {
   cursor: pointer;
+}
+
+.title_card_content {
+  display: flex;
 }
