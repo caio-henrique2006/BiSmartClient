@@ -1,0 +1,12 @@
+article {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 5px;
+  padding: 20px;
+}
+
+.title_text {
+  font-size: 24px;
+  margin-left: 10px;
+}

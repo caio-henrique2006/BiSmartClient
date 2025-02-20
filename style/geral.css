@@ -1,0 +1,55 @@
+html {
+  height: 100%;
+  /* min-width: fit-content; */
+}
+body {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+table {
+  border-collapse: collapse;
+  border: 1px black solid;
+  padding: 5px;
+  margin: 5px;
+}
+td {
+  border-collapse: collapse;
+  border: 1px black solid;
+  padding: 5px;
+}
+
+select {
+  /* appearance: none; */
+  padding: 3px;
+  border: black solid 1px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+input[type="date"] {
+  background-color: white;
+  color: black;
+  border: 1px solid black;
+  padding: 2px;
+}
+input[type="submit"] {
+  margin-left: 5px;
+  padding: 10px;
+  background-color: white;
+  color: black;
+  border: 0px solid black;
+  filter: drop-shadow(2px 2px 2px #535353);
+  padding: 2px;
+  height: 20px;
+}
+input[type="submit"]:hover {
+  background-color: rgb(228, 228, 228);
+  cursor: pointer;
+}
+.search_button:hover {
+  cursor: pointer;
+}
