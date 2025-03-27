@@ -41,33 +41,41 @@ class DB {
   }
 
   async getData(data_inicio, data_fim) {
-    console.log(this.#connection_data);
-    console.log(data_inicio, data_fim);
-    if (handleDate.checkDate(data_inicio, data_fim)) {
-      let data_arr = [];
-      const list_months = handleDate.getListOfMonths(data_inicio, data_fim);
-      console.log("List months: ", list_months);
-      for (const month of list_months) {
-        let data_month_arr = [];
-        let current_date = month.data_inicio;
-        while (handleDate.inicioIsBeforeFim(current_date, month.data_fim)) {
-          const data = await this.fetchDataOnLocalDb([
-            current_date,
-            current_date,
-          ]);
-          data_month_arr.push(data);
-          let day = String(parseInt(data_inicio.slice(8, 10)) + 1);
-          day = day.length == 1 ? "0" + day : day;
-          current_date = data_inicio.slice(0, 7) + day;
+    try {
+      console.log(this.#connection_data);
+      console.log(data_inicio, data_fim);
+      if (handleDate.checkDate(data_inicio, data_fim)) {
+        let data_arr = [];
+        const list_months = handleDate.getListOfMonths(data_inicio, data_fim);
+        console.log("List months: ", list_months);
+        for (const month of list_months) {
+          let data_month_arr = [];
+          let current_date = month.data_inicio;
+          while (handleDate.inicioIsBeforeFim(current_date, month.data_fim)) {
+            console.log("While months: ", handleDate.inicioIsBeforeFim(current_date, month.data_fim), current_date, month.data_fim);
+            const data = await this.fetchDataOnLocalDb([
+              current_date,
+              current_date,
+            ]);
+            data_month_arr.push(data);
+            let day = String(parseInt(current_date.slice(8, 10)) + 1);
+            day = day.length == 1 ? "0" + day : day;
+            current_date = current_date.slice(0, 7) + "-" + day;
+            console.log("Current_date: ", current_date)
+          }
+          data_arr.push({
+            data_inicio: month.data_inicio,
+            data_fim: month.data_fim,
+            dados: data_month_arr,
+          });
         }
-        data_arr.push({
-          data_inicio: month.data_inicio,
-          data_fim: month.data_fim,
-          dados: data_month_arr,
-        });
+        console.log("DATA ARRAY ON DB: ", data_arr);
+        return data_arr;
+      } else {
+        return [];
       }
-      return data_arr;
-    } else {
+    } catch (e) {
+      console.log("Erro ao pegar dados no db: ", e);
       return [];
     }
   }
@@ -123,20 +131,3 @@ class DB {
 }
 
 module.exports = DB;
-
-// async getQuantidadeItensVendidos(data_inicio, data_fim) {
-//     const conn = await this.#connect();
-//     let [rows, fields] = await conn.query("SELECT COUNT(PRODUTO) FROM MOVVENDASP WHERE natoper != 5202 AND natoper != 5411 AND EMISSAO BETWEEN '" + data_inicio + "' AND '" + data_fim + "' AND DOCUM IN (SELECT DOCUM FROM MOVVENDAS WHERE CANCELADA = '' AND EMISSAO BETWEEN '" + data_inicio + "' AND '" + data_fim + "');");
-//     return rows;
-// }
-
-// async getQuantidadeItensComprados(data_inicio, data_fim) {
-//     const conn = await this.#connect();
-//     let [rows, fields] = await conn.query("SELECT COUNT(PRODUTO) FROM MOVENTP WHERE emissao BETWEEN '" + data_inicio + "' AND '" + data_fim + "' AND DOCUM IN (SELECT DOCUM FROM MOVVENDAS WHERE CANCELADA !='S' AND EMISSAO BETWEEN '" + data_inicio + "' AND '" + data_fim + "');");
-//     return rows;
-// }
-// async getAmountClients() {
-//     const conn = await this.#connect();
-//     let [rows, fields] = await conn.query("SELECT count(codigo) FROM cliente");
-//     return rows;
-// }

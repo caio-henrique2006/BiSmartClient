@@ -6,7 +6,7 @@ class Server {
     #email = "";
     #password = "";
     #server_url = "";
-    #server_place = "client_send";
+    #server_route = "client_send";
 
     constructor () {
         this.init();
@@ -27,7 +27,8 @@ class Server {
 
     async sendDataToServer(data) {
         try {
-            const response = await fetch(this.#server_url + this.#server_place, {
+            console.log("URL: ", this.#server_url + this.#server_route);
+            const response = await fetch("http://localhost:3001/" + this.#server_route, {
                 method: "POST",
                 mode: "cors",
                 body: JSON.stringify(data),
