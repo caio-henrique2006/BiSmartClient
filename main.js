@@ -6,7 +6,14 @@ const path = require("node:path");
 const DB = require("./scripts/db.js");
 const Server = require("./scripts/server.js");
 
-async function sendDataToServer(data_inicio, data_fim) {
+async function sendDataToServer(data_inicio="", data_fim="") {
+  if (data_inicio.length == 0 && data_fim.length == 0) {
+    const current_date = new Date();
+    const current_date_formated = current_date.toISOString().slice(0, 10);
+    const current_day_one_month_formated = current_date.toISOString().slice(0, 8) + "01";
+    data_inicio = current_day_one_month_formated;
+    data_fim = current_date_formated;
+  }
   const db = new DB();
   const server = new Server();
   const data_arr = await db.getData(data_inicio, data_fim);
@@ -42,6 +49,12 @@ async function setDBLogin(user, password, database) {
 
 let win = null;
 let exiting = false;
+
+function con () {
+  let str = new Date();
+  console.log("EXECUTOU: ", + str);
+}
+setInterval(sendDataToServer, 10000);
 
 const createWindow = () => {
   win = new BrowserWindow({
