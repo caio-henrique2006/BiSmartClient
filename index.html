@@ -7,64 +7,68 @@
   </head>
   <style>
     body {
-      margin-left: 30px;
+      margin: 30px;
+
     }
     p {
       margin: 0px;
     }
+    header {
+      text-align: center;
+    }
+    .title {
+      margin-left: 0px;
+      font-size: 24px;
+    }
+    .main_title {
+      font-size: 34px;
+      margin-bottom: 15px;
+    }
+    .second_title {
+      font-size: 30px;
+      margin-bottom: 15px;
+    }
+    .card {
+      border: 2px solid black;
+      margin: 10px;
+      padding: 10px;
+    }
   </style>
   <body>
     <header>
-      <a href="./index.html"><img src="./assets/back.svg" /></a>
-      <h1>Configurações</h1>
+      <img src="./assets/logo.png" width="250px">
+      <p class="main_title">BISMART CLIENTES</p>
     </header>
 
-    <div>
-      <h3>Dados de login:</h3>
-      <label>Email: </label>
-      <input type="email" id="set_email" /><br />
-      <label>Senha: </label>
-      <input type="password" id="set_password" /><br />
-      <button id="submit_set_login">login</button>
-    </div>
-    <br />
-    <div>
-      <h3>Forçar o envio de dados para o servidor:</h3>
+    <p class="second_title">Configurações <span><button id="update_info">Atualizar</button></span></p>
+
+    <div class="card">
+      <p class="title">Ferramentas:</p>
+      <label>Forçar envio dos dados para o servidor</label> <br/>
       <input type="date" id="sendData_data_inicio" />
       <input type="date" id="sendData_data_fim" />
-      <button id="submit_sendData">enviar</button>
+      <button id="submit_sendData">Enviar</button>
     </div>
     <br />
-    <div>
-      <h3>Dados do banco de dados local:</h3>
-      <label>User: </label>
+    <div class="card">
+      <p class="title">Dados de login:</p>
+      <label>Email: </label><br />
+      <input type="email" id="set_email" /><br />
+      <label>Senha: </label><br />
+      <input type="password" id="set_password" /><br />
+      <button id="submit_set_login">Salvar</button>
+    </div>
+    <br />
+    <div class="card">
+      <p class="title">Dados do banco de dados local:</p>
+      <label>User: </label><br />
       <input type="text" id="set_db_user" /><br />
-      <label>Senha: </label>
+      <label>Senha: </label><br />
       <input type="text" id="set_db_password" /><br />
-      <label>Database: </label>
+      <label>Database: </label><br />
       <input type="text" id="set_db_database" /><br />
-      <button id="submit_set_localdb">salvar</button>
+      <button id="submit_set_localdb">Salvar</button>
     </div>
-
-    <h2>INFO:</h2>
-    <div>
-      <div>
-        <h3>Login</h3>
-        <p id="info_email"></p>
-        <p>password: ******</p>
-      </div>
-      <div>
-        <h3>Banco de dados</h3>
-        <p id="info_user"></p>
-        <p>password: ******</p>
-        <p id="info_db"></p>
-      </div>
-      <div>
-        <p id="info_server_url"></p>
-      </div>
-      <button id="update_info">Atualizar</button>
-    </div>
-
-    <script src="config.js"></script>
+    <script src="script.js"></script>
   </body>
 </html>

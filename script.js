@@ -1,13 +1,10 @@
 document.getElementById("update_info").addEventListener("click", async () => {
   const response = await window.db.invoke('getInfo', '');
-  document.getElementById("info_email").innerText = "email: ";
-  document.getElementById("info_db").innerText = "db: ";
-  document.getElementById("info_user").innerText = "user: ";
-  document.getElementById("info_server_url").innerText = "server_url: ";
-  document.getElementById("info_email").innerText += " " + response.email;
-  document.getElementById("info_db").innerText += " " + response.database;
-  document.getElementById("info_user").innerText += " " + response.user;
-  document.getElementById("info_server_url").innerText += " " + response.server_url;
+  document.getElementById("set_email").value = response.email;
+  document.getElementById("set_password").value = "*******";
+  document.getElementById("set_db_user").value = response.user;
+  document.getElementById("set_db_password").value = response.password;
+  document.getElementById("set_db_database").value = response.database;
 });
 
 window.onload = () => {
