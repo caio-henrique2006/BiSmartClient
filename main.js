@@ -1,5 +1,6 @@
 const { app, BrowserWindow, ipcMain } = require("electron");
 const fs = require("fs").promises;
+const { Tray, Menu } = require('electron');
 const { existsSync } = require("node:fs");
 const path = require("node:path");
 const DB = require("./scripts/db.js");
@@ -39,10 +40,16 @@ async function setDBLogin(user, password, database) {
   console.log("Salvo novos dados de acesso ao banco de dados");
 }
 
+let win = null;
+let exiting = false;
+
 const createWindow = () => {
-  const win = new BrowserWindow({
+  win = new BrowserWindow({
     width: 500,
     height: 700,
+    show: false,
+    autoHideMenuBar: true,
+    title: "BISmart Clientes",
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       devTools: true,
@@ -50,6 +57,17 @@ const createWindow = () => {
   });
 
   win.loadFile("index.html");
+
+  win.on('close', (event) => {
+    if (!exiting) {
+      event.preventDefault();    
+      win.hide();   
+    }
+  });
+  
+  win.on('closed', () => {
+    win = null;
+  });
 };
 
 ipcMain.handle("getData", async (event, args) => {
@@ -103,6 +121,34 @@ ipcMain.on("setDBLogin", async (event, user, password, database) => {
   await setDBLogin(user, password, database);
 });
 
+
+let tray = null;
+
+function showWindow() {
+  if (!win) createWindow();
+  win.show();
+  win.focus();
+}
+
+function hideWindow() {
+  if (win) {
+    win.hide();
+  }
+}
+
+function closeWindow() {
+    exiting = true;
+    app.quit();
+}
+
 app.whenReady().then(() => {
   createWindow();
+  tray = new Tray('./assets/tray_icon.jpg'); 
+  const contextMenu = Menu.buildFromTemplate([
+    { label: 'Mostrar', click: showWindow },
+    { label: 'Esconder', click: hideWindow },
+    { label: 'Fechar', click: closeWindow },
+  ]);
+  tray.setToolTip('BISmart Clientes');
+  tray.setContextMenu(contextMenu);
 });

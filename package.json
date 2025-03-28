@@ -1,5 +1,6 @@
 {
-  "name": "bismartclient",
+  "name": "bismartcliente",
+  "productName": "BiSmart Cliente",
   "version": "1.0.0",
   "description": "BISMART versão para clientes",
   "main": "main.js",
@@ -13,6 +14,9 @@
     "type": "git",
     "url": "git+https://github.com/caio-henrique2006/BiSmartClient.git"
   },
+  "files": [
+    "background_app/"
+  ],
   "keywords": [
     "bismart",
     "background-process"
