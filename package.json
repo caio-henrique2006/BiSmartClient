@@ -14,9 +14,6 @@
     "type": "git",
     "url": "git+https://github.com/caio-henrique2006/BiSmartClient.git"
   },
-  "files": [
-    "background_app/"
-  ],
   "keywords": [
     "bismart",
     "background-process"
