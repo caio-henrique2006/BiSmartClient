@@ -1,113 +1,17 @@
-const { app, BrowserWindow, ipcMain } = require("electron");
-const { sub } = require("date-fns");
+const { app, BrowserWindow, ipcMain, Tray, Menu } = require("electron");
 const fs = require("fs").promises;
-const { Tray, Menu } = require('electron');
-const { existsSync } = require("node:fs");
 const path = require("node:path");
+const Event = require("./scripts/Event.js");
 const DB = require("./scripts/db.js");
 const Server = require("./scripts/server.js");
 
-async function checkFiles() {
-  const path_userData = app.getPath("userData");
-  const storage_server_path = path.join(path_userData, "server_login.json");
-  const storage_db_path = path.join(path_userData, "db_login.json");
-  const cache_path = path.join(path_userData, "cache.json");
-  if (!existsSync(storage_db_path)) {
-    const db_data = {
-      user: "root",
-      password: "",
-      database: "geral",
-    };
-    await fs.writeFile(storage_db_path, JSON.stringify(db_data));
-  } else if (!existsSync(storage_server_path)) {
-    const server_data = {
-      email: "*",
-      password: "*",
-      server_url: "https://bi-smart-server.vercel.app/",
-    };
-    await fs.writeFile(storage_server_path, JSON.stringify(server_data));
-  } else if (!existsSync(cache_path)) {
-    const cache = {};
-    await fs.writeFile(cache_path, JSON.stringify(cache));
-  }
-}
-
-async function sendDataToServer(data_inicio, data_fim) {
-  const db = new DB();
-  const server = new Server();
-  const data_arr = await db.getData(data_inicio, data_fim);
-  console.log("array of data: ", data_arr);
-  for (const data of data_arr) {
-    const response = await server.sendDataToServer(data);
-    console.log(response);
-  }
-}
-
-async function setLogin(email, password) {
-  const path_userData = app.getPath("userData");
-  const filePath = path.join(path_userData, "server_login.json");
-  const current_server_data = JSON.parse(await fs.readFile(filePath, "utf8"));
-  const new_data = JSON.parse(JSON.stringify(current_server_data));
-  new_data.email = email;
-  new_data.password = password;
-  await fs.writeFile(filePath, JSON.stringify(new_data));
-  console.log("Salvo novos dados de login");
-}
-
-async function setDBLogin(user, password, database) {
-  const path_userData = app.getPath("userData");
-  const filePath = path.join(path_userData, "db_login.json");
-  const current_server_data = JSON.parse(await fs.readFile(filePath, "utf8"));
-  const new_data = JSON.parse(JSON.stringify(current_server_data));
-  new_data.user = user;
-  new_data.password = password;
-  new_data.database = database;
-  await fs.writeFile(filePath, JSON.stringify(new_data));
-  console.log("Salvo novos dados de acesso ao banco de dados");
-}
-
 let win = null;
 let exiting = false;
-
-function compareData(data_1, data_2) {
-  try {
-    Object.keys(data_1).forEach(item => {
-      console.log(data_1[item], data_2[item]);
-      if (data_1[item] != data_2[item]) {
-        return false;
-      }
-    });
-    return true;
-  } catch(e) {
-    return false;
-  }
-}
-
-async function cron_job () {
-  const current_date = new Date();
-  const previous_month_date = sub(current_date, {
-    months: 1
-  });
-  const data_inicio = previous_month_date.toISOString().slice(0, 10);
-  const data_fim = current_date.toISOString().slice(0, 8) + "01";
-  console.log(data_inicio, data_fim);
-  // ---
-  const path_userData = app.getPath("userData");
-  const filePath = path.join(path_userData, "cache.json");
-  const current_cache_data = JSON.parse(await fs.readFile(filePath, "utf8"));
-  const db = new DB();
-  const current_data = await db.getData(data_inicio, data_fim);
-  console.log(current_cache_data, current_data[1].dados[current_data[1].dados.length-1]);
-  if (!compareData(current_cache_data, current_data[1].dados[current_data[1].dados.length-1])) {
-    fs.writeFile(filePath, JSON.stringify(current_data[1].dados[current_data[1].dados.length-1]));
-    console.log("Executa");
-  } else {
-    console.log("Nao Executa");
-  }
-  // sendDataToServer(data_inicio, data_fim);
-}
-cron_job();
-// setInterval(cron_job, 3000);
+const handleEvent = new Event(app);
+setInterval(() => {
+  handleEvent.cron();
+}, 3000);
+// handleEvent.cron();
 
 const createWindow = async () => {
   win = new BrowserWindow({
@@ -122,18 +26,18 @@ const createWindow = async () => {
     },
   });
 
-  await checkFiles();
+  await handleEvent.checkLocalStorageFiles();
 
   win.loadFile("index.html");
 
-  win.on('close', (event) => {
+  win.on("close", (event) => {
     if (!exiting) {
-      event.preventDefault();    
-      win.hide();   
+      event.preventDefault();
+      win.hide();
     }
   });
-  
-  win.on('closed', () => {
+
+  win.on("closed", () => {
     win = null;
   });
 };
@@ -148,28 +52,6 @@ ipcMain.handle("getInfo", async (event, args) => {
   const path_userData = app.getPath("userData");
   const storage_server_path = path.join(path_userData, "server_login.json");
   const storage_db_path = path.join(path_userData, "db_login.json");
-  console.log(path_userData);
-  console.log(storage_server_path);
-  console.log(storage_db_path);
-  if (
-    !existsSync(path_userData) ||
-    !existsSync(storage_db_path) ||
-    !existsSync(storage_server_path)
-  ) {
-    const server_data = {
-      email: "*",
-      password: "*",
-      server_url: "https://bi-smart-server.vercel.app/",
-    };
-    const db_data = {
-      user: "root",
-      password: "",
-      database: "geral",
-    };
-    await fs.writeFile(storage_server_path, JSON.stringify(server_data));
-    await fs.writeFile(storage_db_path, JSON.stringify(db_data));
-  }
-
   const server_data = JSON.parse(
     await fs.readFile(storage_server_path, "utf-8")
   );
@@ -178,17 +60,16 @@ ipcMain.handle("getInfo", async (event, args) => {
   return response_data;
 });
 
-ipcMain.on("sendDataToServer", (event, data_inicio, data_fim) => {
-  sendDataToServer(data_inicio, data_fim);
+ipcMain.on("sendDataToServer", async (event, data_inicio, data_fim) => {
+  await handleEvent.sendDataToServer(data_inicio, data_fim);
 });
-ipcMain.on("setLogin", (event, email, password) => {
-  setLogin(email, password);
+ipcMain.on("setLogin", async (event, email, password) => {
+  await handleEvent.setLogin(email, password);
 });
 ipcMain.on("setDBLogin", async (event, user, password, database) => {
   console.log("setting db login");
-  await setDBLogin(user, password, database);
+  await handleEvent.setDBLogin(user, password, database);
 });
-
 
 let tray = null;
 
@@ -205,18 +86,18 @@ function hideWindow() {
 }
 
 function closeWindow() {
-    exiting = true;
-    app.quit();
+  exiting = true;
+  app.quit();
 }
 
 app.whenReady().then(() => {
   createWindow();
-  tray = new Tray('./assets/tray_icon.jpg'); 
+  tray = new Tray("./assets/tray_icon.jpg");
   const contextMenu = Menu.buildFromTemplate([
-    { label: 'Mostrar', click: showWindow },
-    { label: 'Esconder', click: hideWindow },
-    { label: 'Fechar', click: closeWindow },
+    { label: "Mostrar", click: showWindow },
+    { label: "Esconder", click: hideWindow },
+    { label: "Fechar", click: closeWindow },
   ]);
-  tray.setToolTip('BISmart Clientes');
+  tray.setToolTip("BISmart Clientes");
   tray.setContextMenu(contextMenu);
 });

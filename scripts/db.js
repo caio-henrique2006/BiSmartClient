@@ -47,12 +47,11 @@ class DB {
       if (handleDate.checkDate(data_inicio, data_fim)) {
         let data_arr = [];
         const list_months = handleDate.getListOfMonths(data_inicio, data_fim);
-        console.log("List months: ", list_months);
+        // console.log("List months: ", list_months);
         for (const month of list_months) {
           let data_month_arr = [];
           let current_date = month.data_inicio;
           while (handleDate.inicioIsBeforeFim(current_date, month.data_fim)) {
-            console.log("While months: ", handleDate.inicioIsBeforeFim(current_date, month.data_fim), current_date, month.data_fim);
             const data = await this.fetchDataOnLocalDb([
               current_date,
               current_date,
@@ -61,7 +60,6 @@ class DB {
             let day = String(parseInt(current_date.slice(8, 10)) + 1);
             day = day.length == 1 ? "0" + day : day;
             current_date = current_date.slice(0, 7) + "-" + day;
-            console.log("Current_date: ", current_date)
           }
           data_arr.push({
             data_inicio: month.data_inicio,
@@ -69,7 +67,6 @@ class DB {
             dados: data_month_arr,
           });
         }
-        console.log("DATA ARRAY ON DB: ", data_arr);
         return data_arr;
       } else {
         return [];
