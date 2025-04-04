@@ -75,6 +75,9 @@ class Event {
   async setDBLogin(user, password, database) {
     console.log("Setting DB login data...");
     try {
+      const current_db_data = JSON.parse(
+        await fs.readFile(this.db_file_path, "utf8")
+      );
       const new_data = JSON.parse(JSON.stringify(current_db_data));
       new_data.user = user;
       new_data.password = password;

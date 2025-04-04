@@ -8,9 +8,9 @@ const Server = require("./scripts/server.js");
 let win = null;
 let exiting = false;
 const handleEvent = new Event(app);
-setInterval(() => {
-  handleEvent.cron();
-}, 10000);
+// setInterval(() => {
+//   handleEvent.cron();
+// }, 10000);
 
 const createWindow = async () => {
   win = new BrowserWindow({
@@ -42,6 +42,7 @@ const createWindow = async () => {
 };
 
 ipcMain.handle("getData", async (event, args) => {
+  console.log("Argumentos: ", args);
   const db = new DB();
   const data_arr = await db.getData(args.data_inicio, args.data_fim);
   return data_arr;

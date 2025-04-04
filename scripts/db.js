@@ -15,11 +15,15 @@ class DB {
     valor_vendas:
       "SELECT sum(totgeral) FROM movvendas WHERE cancelada = 'N' AND emissao BETWEEN ? AND ?;",
     valor_compras:
-      "SELECT sum(totgeral) FROM MOVENT WHERE EMISSAO BETWEEN ? AND ? AND CANCELADA !='S';",
+      "SELECT sum(totgeral) FROM movent WHERE cancelada != 'S' AND chegada BETWEEN ? AND ?;",
     quantidade_vendas:
       "SELECT count(docum) FROM movvendas WHERE cancelada = 'N' AND emissao BETWEEN ? AND ?;",
     ticket_medio:
       "SELECT AVG(totgeral) FROM movvendas WHERE cancelada = 'N' AND emissao BETWEEN ? AND ?;",
+
+    /*
+    SELECT sum(qtde) FROM movent movent1, moventp moventp1,fornecedor fornecedor1,filial filial1,natoper natoper1,produtos produtos1 WHERE movent1.row_id=moventp1.autoincr and movent1.fornec=fornecedor1.codigo and movent1.filial=filial1.filial AND moventp1.produto=produtos1.codigo AND movent1.natoper = natoper1.codigo AND LOCATE(LEFT(RPAD(movent1.cancelada,1," "),1),QUOTE("SC")) = 0 AND movent1.filial = '01' AND movent1.efetivado = 'S' AND LOCATE(LEFT(RPAD(natoper1.tipomov,1," "),1),QUOTE("COF")) > 0 AND movent1.chegada >= '2024-01-01' AND movent1.chegada <= '2024-01-31' 
+    */
   };
 
   constructor() {
@@ -114,10 +118,12 @@ class DB {
   async executeSQLCommand(label, command, parameters) {
     const conn = await this.#connect();
     let [rows, fields] = await conn.query(command, parameters);
+    console.log(label, rows);
     const value = rows[0][Object.keys(rows[0])[0]]
       ? rows[0][Object.keys(rows[0])[0]]
       : 0;
     const response = { [label]: value };
+    console.log(response);
     conn.end();
     return response;
   }

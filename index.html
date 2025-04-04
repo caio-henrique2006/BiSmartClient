@@ -8,7 +8,6 @@
   <style>
     body {
       margin: 30px;
-
     }
     p {
       margin: 0px;
@@ -36,15 +35,22 @@
   </style>
   <body>
     <header>
-      <img src="./assets/logo.png" width="250px">
+      <img src="./assets/logo.png" width="250px" />
       <p class="main_title">BISMART CLIENTES</p>
     </header>
 
-    <p class="second_title">Configurações <span><button id="update_info">Atualizar</button></span></p>
+    <p class="second_title">
+      Configurações <span><button id="update_info">Atualizar</button></span>
+    </p>
 
     <div class="card">
       <p class="title">Ferramentas:</p>
-      <label>Forçar envio dos dados para o servidor</label> <br/>
+      <label>Visualizar dados:</label> <br />
+      <input type="date" id="showData_data_inicio" />
+      <input type="date" id="showData_data_fim" />
+      <button id="submit_showData">Enviar</button> <br />
+      <br />
+      <label>Forçar envio dos dados para o servidor</label>
       <input type="date" id="sendData_data_inicio" />
       <input type="date" id="sendData_data_fim" />
       <button id="submit_sendData">Enviar</button>
@@ -69,6 +75,8 @@
       <input type="text" id="set_db_database" /><br />
       <button id="submit_set_localdb">Salvar</button>
     </div>
+
+    <div class="card" id="show_card" style="max-width: 300px"></div>
     <script src="script.js"></script>
   </body>
 </html>

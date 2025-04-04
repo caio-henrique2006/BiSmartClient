@@ -17,6 +17,7 @@ class Server {
       const path_userData = app.getPath("userData");
       const filePath = path.join(path_userData, "server_login.json");
       const data = JSON.parse(fs.readFileSync(filePath, { encoding: "utf8" }));
+      console.log("server_login: ", data);
       this.#email = data.email;
       this.#password = data.password;
       this.#server_url = data.server_url;
@@ -27,7 +28,7 @@ class Server {
 
   async sendDataToServer(data) {
     try {
-      // console.log("URL: ", this.#server_url + this.#server_route);
+      console.log("URL: ", this.#server_url + this.#server_route);
       const response = await fetch(this.#server_url + this.#server_route, {
         method: "POST",
         mode: "cors",
