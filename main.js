@@ -10,8 +10,7 @@ let exiting = false;
 const handleEvent = new Event(app);
 setInterval(() => {
   handleEvent.cron();
-}, 3000);
-// handleEvent.cron();
+}, 10000);
 
 const createWindow = async () => {
   win = new BrowserWindow({

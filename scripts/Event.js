@@ -54,10 +54,9 @@ class Event {
     const db = new DB();
     const server = new Server();
     const data_arr = await db.getData(data_inicio, data_fim);
-    console.log("array of data: ", data_arr);
     for (const data of data_arr) {
       const response = await server.sendDataToServer(data);
-      console.log(response);
+      console.log("Dados enviados: ", response);
     }
   }
 
@@ -114,7 +113,7 @@ class Event {
         console.log("Nao Executa");
       }
     } catch (e) {
-      console.log("ERRO: Não pode executar a rotina");
+      console.log("ERRO: Can't execute routine...");
       console.log(e);
     }
   }

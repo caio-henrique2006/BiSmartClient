@@ -42,8 +42,8 @@ class DB {
 
   async getData(data_inicio, data_fim) {
     try {
-      console.log(this.#connection_data);
-      console.log(data_inicio, data_fim);
+      // console.log(this.#connection_data);
+      // console.log(data_inicio, data_fim);
       if (handleDate.checkDate(data_inicio, data_fim)) {
         let data_arr = [];
         const list_months = handleDate.getListOfMonths(data_inicio, data_fim);
