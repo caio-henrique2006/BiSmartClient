@@ -102,13 +102,12 @@ class Event {
         data_inicio,
         data_fim
       );
+      console.log("CURRENT DATA: ", current_data);
       if (hasChanges) {
         console.log("Sending changes to server...");
-        fs.writeFile(
-          filePath,
-          JSON.stringify(
-            current_data[1].dados[current_data[1].dados.length - 1]
-          )
+        await fs.writeFile(
+          this.cache_file_path,
+          JSON.stringify(current_data[1].dados)
         );
         console.log("Executa");
       } else {
@@ -129,8 +128,8 @@ class Event {
     const db = new DB();
     const current_data = await db.getData(data_inicio, data_fim);
     return {
-      hasChanges: !util.isDataEqual(
-        current_data[1].dados[current_data[1].dados.length - 1],
+      hasChanges: util.isDataDifferent(
+        current_data[1].dados,
         current_cache_data
       ),
       current_data: current_data,
