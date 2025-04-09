@@ -8,9 +8,9 @@ const Server = require("./scripts/server.js");
 let win = null;
 let exiting = false;
 const handleEvent = new Event(app);
-// setInterval(() => {
-//   handleEvent.cron();
-// }, 10000);
+setInterval(() => {
+  handleEvent.cron();
+}, 1000 * 60 * 5);
 
 const createWindow = async () => {
   win = new BrowserWindow({
@@ -26,6 +26,8 @@ const createWindow = async () => {
   });
 
   await handleEvent.checkLocalStorageFiles();
+
+  handleEvent.cron();
 
   win.loadFile("index.html");
 

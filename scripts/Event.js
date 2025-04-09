@@ -130,8 +130,8 @@ class Event {
     const current_data = await db.getData(data_inicio, data_fim);
     return {
       hasChanges: !util.isDataEqual(
-        current_cache_data,
-        current_data[1].dados[current_data[1].dados.length - 1]
+        current_data[1].dados[current_data[1].dados.length - 1],
+        current_cache_data
       ),
       current_data: current_data,
     };

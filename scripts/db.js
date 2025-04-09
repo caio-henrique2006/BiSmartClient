@@ -10,20 +10,42 @@ class DB {
     user: "",
     password: "",
     database: "",
+    charset: "utf8mb4_unicode_ci",
   };
   #SQL_commands = {
-    valor_vendas:
-      "SELECT sum(totgeral) FROM movvendas WHERE cancelada = 'N' AND emissao BETWEEN ? AND ?;",
-    valor_compras:
-      "SELECT sum(totgeral) FROM movent WHERE cancelada != 'S' AND chegada BETWEEN ? AND ?;",
-    quantidade_vendas:
-      "SELECT count(docum) FROM movvendas WHERE cancelada = 'N' AND emissao BETWEEN ? AND ?;",
-    ticket_medio:
-      "SELECT AVG(totgeral) FROM movvendas WHERE cancelada = 'N' AND emissao BETWEEN ? AND ?;",
-
-    /*
-    SELECT sum(qtde) FROM movent movent1, moventp moventp1,fornecedor fornecedor1,filial filial1,natoper natoper1,produtos produtos1 WHERE movent1.row_id=moventp1.autoincr and movent1.fornec=fornecedor1.codigo and movent1.filial=filial1.filial AND moventp1.produto=produtos1.codigo AND movent1.natoper = natoper1.codigo AND LOCATE(LEFT(RPAD(movent1.cancelada,1," "),1),QUOTE("SC")) = 0 AND movent1.filial = '01' AND movent1.efetivado = 'S' AND LOCATE(LEFT(RPAD(natoper1.tipomov,1," "),1),QUOTE("COF")) > 0 AND movent1.chegada >= '2024-01-01' AND movent1.chegada <= '2024-01-31' 
-    */
+    valor_vendas: `SELECT sum(totgeral) FROM movvendas WHERE cancelada = 'N' AND emissao BETWEEN ? AND ?;`,
+    valor_compras: `SELECT sum(totgeral) FROM movent WHERE cancelada != 'S' AND chegada BETWEEN ? AND ?;`,
+    quantidade_itens_vendidos: `SELECT sum(qtde) FROM movvendas mo USE INDEX (idx_movvendas_6),movvendasp mp, 
+    produtos po,natoper na WHERE mo.row_id=mp.autoincr 
+    AND mo.natoper=na.codigo 
+    AND mp.produto=po.codigo 
+    AND LOCATE(LEFT(RPAD(na.tipomov,1,' '),1),QUOTE('OVDG')) > 0 
+    AND mo.filial = '01' AND mo.serie <> '' AND mo.emissao >= ? 
+    AND mo.emissao <= ? AND LOCATE(LEFT(RPAD(mo.cancelada,1,' '),1),QUOTE('SC')) = 0`,
+    quantidade_vendas: `SELECT count(docum) FROM movvendas WHERE cancelada = 'N' AND emissao BETWEEN ? AND ?;`,
+    quantidade_compras: `SELECT sum(qtde) FROM movent movent1, moventp moventp1, fornecedor fornecedor1, 
+    filial filial1, natoper natoper1,produtos produtos1 WHERE movent1.row_id=moventp1.autoincr 
+    and movent1.fornec=fornecedor1.codigo and movent1.filial=filial1.filial 
+    AND moventp1.produto=produtos1.codigo AND movent1.natoper = natoper1.codigo 
+    AND LOCATE(LEFT(RPAD(movent1.cancelada,1,' '),1),QUOTE('SC')) = 0 
+    AND movent1.filial = '01' AND movent1.efetivado = 'S' 
+    AND LOCATE(LEFT(RPAD(natoper1.tipomov,1,' '),1),QUOTE('COF')) > 0 
+    AND movent1.chegada >= ? AND movent1.chegada <= ?`,
+    ticket_medio: `SELECT AVG(totgeral) FROM movvendas WHERE cancelada = 'N' AND emissao BETWEEN ? AND ?;`,
+    vendas_grupo: `SELECT gp.descr as name, sum(qtde) as quantidade_itens, count(mo.docum) as quantidade_vendas, sum(mo.totgeral) as vendas
+    FROM movvendas mo USE INDEX (idx_movvendas_6),movvendasp mp,
+    produtos po,natoper na
+    JOIN grupos gp ON po.grupo = gp.codigo
+    WHERE mo.row_id=mp.autoincr
+    AND mo.natoper=na.codigo
+    AND mp.produto=po.codigo
+    AND LOCATE(LEFT(RPAD(na.tipomov,1,' '),1),QUOTE('OVDG')) > 0
+    AND mo.filial = '01'
+    AND mo.serie <> ''
+    AND mo.emissao >= ?
+    AND mo.emissao <= ?
+    AND LOCATE(LEFT(RPAD(mo.cancelada,1,' '),1),QUOTE('SC')) = 0
+    GROUP BY gp.descr`,
   };
 
   constructor() {
@@ -71,6 +93,7 @@ class DB {
             dados: data_month_arr,
           });
         }
+        console.log("DATA: ", data_arr[0].dados);
         return data_arr;
       } else {
         return [];
@@ -92,9 +115,19 @@ class DB {
       this.#SQL_commands.valor_compras,
       parameters
     );
+    const quantidade_itens_vendidos = await this.executeSQLCommand(
+      "quantidade_itens_vendidos",
+      this.#SQL_commands.quantidade_itens_vendidos,
+      parameters
+    );
     const quantidade_vendas = await this.executeSQLCommand(
       "quantidade_vendas",
       this.#SQL_commands.quantidade_vendas,
+      parameters
+    );
+    const quantidade_compras = await this.executeSQLCommand(
+      "quantidade_compras",
+      this.#SQL_commands.quantidade_compras,
       parameters
     );
     const ticket_medio = await this.executeSQLCommand(
@@ -102,12 +135,21 @@ class DB {
       this.#SQL_commands.ticket_medio,
       parameters
     );
+    const vendas_grupo = await this.executeSQLCommand(
+      "vendas_grupo",
+      this.#SQL_commands.vendas_grupo,
+      parameters,
+      true
+    );
     const data = Object.assign(
       {},
       valor_vendas,
       valor_compras,
+      quantidade_itens_vendidos,
       quantidade_vendas,
+      quantidade_compras,
       ticket_medio,
+      vendas_grupo,
       {
         data: parameters[0],
       }
@@ -115,15 +157,19 @@ class DB {
     return data;
   }
 
-  async executeSQLCommand(label, command, parameters) {
+  async executeSQLCommand(label, command, parameters, keep_structure = false) {
     const conn = await this.#connect();
     let [rows, fields] = await conn.query(command, parameters);
     console.log(label, rows);
-    const value = rows[0][Object.keys(rows[0])[0]]
-      ? rows[0][Object.keys(rows[0])[0]]
-      : 0;
+    let value;
+    if (keep_structure) {
+      value = rows;
+    } else {
+      value = rows?.[0]?.[Object.keys(rows[0])[0]]
+        ? rows?.[0]?.[Object.keys(rows[0])[0]]
+        : 0;
+    }
     const response = { [label]: value };
-    console.log(response);
     conn.end();
     return response;
   }
