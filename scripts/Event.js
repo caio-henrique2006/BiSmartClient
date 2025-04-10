@@ -49,11 +49,16 @@ class Event {
     }
   }
 
-  async sendDataToServer(data_inicio, data_fim) {
+  async sendDataToServer(data_inicio, data_fim, cache_data = false) {
     console.log("Sending data to server...");
     const db = new DB();
     const server = new Server();
-    const data_arr = await db.getData(data_inicio, data_fim);
+    let data_arr;
+    if (cache_data) {
+      data_arr = cache_data;
+    } else {
+      data_arr = await db.getData(data_inicio, data_fim);
+    }
     for (const data of data_arr) {
       const response = await server.sendDataToServer(data);
       console.log("Dados enviados: ", response);
@@ -104,15 +109,19 @@ class Event {
       );
       console.log("CURRENT DATA: ", current_data);
       if (hasChanges) {
+        console.log("Changes detected...");
         console.log("Sending changes to server...");
         await fs.writeFile(
           this.cache_file_path,
           JSON.stringify(current_data[1].dados)
         );
-        console.log("Executa");
+        await this.sendDataToServer(
+          current_data[0].data_inicio,
+          current_data[1].data_fim,
+          [(current_data[0], current_data[1])]
+        );
       } else {
         console.log("No changes found...");
-        console.log("Nao Executa");
       }
     } catch (e) {
       console.log("ERRO: Can't execute routine...");

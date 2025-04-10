@@ -135,12 +135,12 @@ class DB {
       this.#SQL_commands.ticket_medio,
       parameters
     );
-    // const vendas_grupo = await this.executeSQLCommand(
-    //   "vendas_grupo",
-    //   this.#SQL_commands.vendas_grupo,
-    //   parameters,
-    //   true
-    // );
+    const vendas_grupo = await this.executeSQLCommand(
+      "vendas_grupo",
+      this.#SQL_commands.vendas_grupo,
+      parameters,
+      true
+    );
     const data = Object.assign(
       {},
       valor_vendas,
@@ -149,7 +149,7 @@ class DB {
       quantidade_vendas,
       quantidade_compras,
       ticket_medio,
-      // vendas_grupo,
+      vendas_grupo,
       {
         data: parameters[0],
       }
