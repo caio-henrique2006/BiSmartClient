@@ -13,7 +13,16 @@ class DB {
     charset: "utf8mb4_unicode_ci",
   };
   #SQL_commands = {
-    valor_vendas: `SELECT sum(totgeral) FROM movvendas WHERE cancelada = 'N' AND emissao BETWEEN ? AND ?;`,
+    valor_vendas: `SELECT sum(ValorLiquido) FROM movvendas movvendas1,movvendasp movvendasp1,cliente cliente1,
+    natoper natoper1,filial filial1,vend vend1 WHERE movvendas1.row_id=movvendasp1.autoincr 
+    and movvendas1.cliente=cliente1.codigo 
+    AND movvendas1.natoper = natoper1.codigo 
+    and movvendas1.filial=filial1.filial 
+    AND LOCATE(LEFT(RPAD(natoper1.tipomov,1," "),1),QUOTE("OVDG")) > 0 
+    AND movvendas1.vendedor=vend1.codigo 
+    AND LOCATE(LEFT(RPAD(movvendas1.cancelada,1," "),1),QUOTE("SC")) = 0 
+    AND LENGTH(movvendas1.docum) <> 11 AND Movvendas1.Filial = '01' 
+    AND movvendas1.emissao >= ? AND movvendas1.emissao <= ? `,
     valor_compras: `SELECT sum(totgeral) FROM movent WHERE cancelada != 'S' AND chegada BETWEEN ? AND ?;`,
     quantidade_itens_vendidos: `SELECT sum(qtde) FROM movvendas mo USE INDEX (idx_movvendas_6),movvendasp mp, 
     produtos po,natoper na WHERE mo.row_id=mp.autoincr 
@@ -22,16 +31,25 @@ class DB {
     AND LOCATE(LEFT(RPAD(na.tipomov,1,' '),1),QUOTE('OVDG')) > 0 
     AND mo.filial = '01' AND mo.serie <> '' AND mo.emissao >= ? 
     AND mo.emissao <= ? AND LOCATE(LEFT(RPAD(mo.cancelada,1,' '),1),QUOTE('SC')) = 0`,
-    quantidade_vendas: `SELECT count(docum) FROM movvendas WHERE cancelada = 'N' AND emissao BETWEEN ? AND ?;`,
-    quantidade_compras: `SELECT sum(qtde) FROM movent movent1, moventp moventp1, fornecedor fornecedor1, 
-    filial filial1, natoper natoper1,produtos produtos1 WHERE movent1.row_id=moventp1.autoincr 
-    and movent1.fornec=fornecedor1.codigo and movent1.filial=filial1.filial 
+    quantidade_vendas: `SELECT count(DISTINCT mo.docum) FROM movvendas mo USE INDEX (idx_movvendas_6),movvendasp mp,
+    produtos po,natoper na WHERE 
+    mo.row_id=mp.autoincr
+     AND mo.natoper=na.codigo
+     AND mp.produto=po.codigo
+     AND LOCATE(LEFT(RPAD(na.tipomov,1," "),1),QUOTE("OVDG")) > 0
+     AND mo.filial = '01'
+     AND mo.serie <> ""
+     AND mo.emissao >= ?
+     AND mo.emissao <= ?
+     AND LOCATE(LEFT(RPAD(mo.cancelada,1," "),1),QUOTE("SC")) = 0`,
+    quantidade_compras: `SELECT count(DISTINCT movent1.docum) FROM movent movent1, moventp moventp1,
+    fornecedor fornecedor1,filial filial1,natoper natoper1,produtos produtos1 WHERE 
+    movent1.row_id=moventp1.autoincr and movent1.fornec=fornecedor1.codigo and movent1.filial=filial1.filial 
     AND moventp1.produto=produtos1.codigo AND movent1.natoper = natoper1.codigo 
-    AND LOCATE(LEFT(RPAD(movent1.cancelada,1,' '),1),QUOTE('SC')) = 0 
+    AND LOCATE(LEFT(RPAD(movent1.cancelada,1," "),1),QUOTE("SC")) = 0 
     AND movent1.filial = '01' AND movent1.efetivado = 'S' 
-    AND LOCATE(LEFT(RPAD(natoper1.tipomov,1,' '),1),QUOTE('COF')) > 0 
+    AND LOCATE(LEFT(RPAD(natoper1.tipomov,1," "),1),QUOTE("COF")) > 0 
     AND movent1.chegada >= ? AND movent1.chegada <= ?`,
-    ticket_medio: `SELECT AVG(totgeral) FROM movvendas WHERE cancelada = 'N' AND emissao BETWEEN ? AND ?;`,
     vendas_grupo: `SELECT gp.descr as name, sum(qtde) as quantidade_itens, count(mo.docum) as quantidade_vendas, sum(mo.totgeral) as vendas
     FROM movvendas mo USE INDEX (idx_movvendas_6),movvendasp mp,
     produtos po,natoper na
@@ -130,11 +148,6 @@ class DB {
       this.#SQL_commands.quantidade_compras,
       parameters
     );
-    const ticket_medio = await this.executeSQLCommand(
-      "ticket_medio",
-      this.#SQL_commands.ticket_medio,
-      parameters
-    );
     const vendas_grupo = await this.executeSQLCommand(
       "vendas_grupo",
       this.#SQL_commands.vendas_grupo,
@@ -148,7 +161,6 @@ class DB {
       quantidade_itens_vendidos,
       quantidade_vendas,
       quantidade_compras,
-      ticket_medio,
       vendas_grupo,
       {
         data: parameters[0],

@@ -118,7 +118,7 @@ class Event {
         await this.sendDataToServer(
           current_data[0].data_inicio,
           current_data[1].data_fim,
-          [(current_data[0], current_data[1])]
+          [current_data[0], current_data[1]]
         );
       } else {
         console.log("No changes found...");
