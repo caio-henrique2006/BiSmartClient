@@ -64,6 +64,14 @@ class DB {
     AND mo.emissao <= ?
     AND LOCATE(LEFT(RPAD(mo.cancelada,1,' '),1),QUOTE('SC')) = 0
     GROUP BY gp.descr`,
+    tributacao: `SELECT 
+    COUNT(CASE WHEN produtos.cst = 102 THEN 1 END) AS quantidade_tributado,
+    COUNT(CASE WHEN produtos.cst != 102 THEN 1 END) AS quantidade_substituido
+    FROM produtos 
+    INNER JOIN moventp ON produtos.codigo = moventp.produto 
+    INNER JOIN movent ON moventp.docum = movent.docum 
+    WHERE chegada >= ? and chegada <= ?
+    `,
   };
 
   constructor() {
@@ -154,6 +162,12 @@ class DB {
       parameters,
       true
     );
+    const tributacao = await this.executeSQLCommand(
+      "tributacao",
+      this.#SQL_commands.tributacao,
+      parameters,
+      true
+    );
     const data = Object.assign(
       {},
       valor_vendas,
@@ -162,6 +176,7 @@ class DB {
       quantidade_vendas,
       quantidade_compras,
       vendas_grupo,
+      tributacao,
       {
         data: parameters[0],
       }
@@ -169,7 +184,12 @@ class DB {
     return data;
   }
 
-  async executeSQLCommand(label, command, parameters, keep_structure = false) {
+  async executeSQLCommand(
+    label,
+    command,
+    parameters = "",
+    keep_structure = false
+  ) {
     const conn = await this.#connect();
     let [rows, fields] = await conn.query(command, parameters);
     console.log(label, rows);
