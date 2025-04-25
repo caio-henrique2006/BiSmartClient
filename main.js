@@ -24,7 +24,7 @@ const createWindow = async () => {
 
   await handleEvent.checkLocalStorageFiles();
 
-  // handleEvent.cron();
+  handleEvent.cron();
 
   win.loadFile(path.join(__dirname, "pages/index.html"));
 
@@ -42,7 +42,7 @@ const createWindow = async () => {
 
 setInterval(() => {
   handleEvent.cron();
-}, 1000 * 60 * 10);
+}, 1000 * 60 * 20);
 
 ipcMain.handle("getData", async (event, args) => {
   console.log("Argumentos: ", args);
