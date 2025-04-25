@@ -1,0 +1,26 @@
+body {
+  margin: 30px;
+}
+p {
+  margin: 0px;
+}
+header {
+  text-align: center;
+}
+.title {
+  margin-left: 0px;
+  font-size: 24px;
+}
+.main_title {
+  font-size: 34px;
+  margin-bottom: 15px;
+}
+.second_title {
+  font-size: 30px;
+  margin-bottom: 15px;
+}
+.card {
+  border: 2px solid black;
+  margin: 10px;
+  padding: 10px;
+}

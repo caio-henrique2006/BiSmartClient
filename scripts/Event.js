@@ -36,14 +36,16 @@ class Event {
         database: "geral",
       };
       await fs.writeFile(this.db_file_path, JSON.stringify(db_data));
-    } else if (!existsSync(this.server_file_path)) {
+    }
+    if (!existsSync(this.server_file_path)) {
       const server_data = {
-        email: "*",
+        email: "email@",
         password: "*",
         server_url: "https://bi-smart-server.vercel.app/",
       };
       await fs.writeFile(this.server_file_path, JSON.stringify(server_data));
-    } else if (!existsSync(this.cache_file_path)) {
+    }
+    if (!existsSync(this.cache_file_path)) {
       const cache = {};
       await fs.writeFile(this.cache_file_path, JSON.stringify(cache));
     }
@@ -59,10 +61,12 @@ class Event {
     } else {
       data_arr = await db.getData(data_inicio, data_fim);
     }
+    let response = "Erro no banco de dados. Cheque os dados de conexão";
     for (const data of data_arr) {
-      const response = await server.sendDataToServer(data);
+      response = await server.sendDataToServer(data);
       console.log("Dados enviados: ", response);
     }
+    return response;
   }
 
   async setLogin(email, password) {
@@ -75,6 +79,7 @@ class Event {
     new_data.password = password;
     await fs.writeFile(this.server_file_path, JSON.stringify(new_data));
     console.log("Salvo novos dados de login");
+    return "Dados Salvos";
   }
 
   async setDBLogin(user, password, database) {
@@ -93,6 +98,7 @@ class Event {
       console.log("ERRO AO SALVAR DADOS DE LOGIN");
       console.log(e);
     }
+    return "Dados Salvos";
   }
 
   async cron() {

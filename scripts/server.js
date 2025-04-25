@@ -43,13 +43,13 @@ class Server {
       const response_data = await response.json();
       switch (response_data.status) {
         case 200:
-          return "Sucesso";
+          return "Enviado com sucesso";
           break;
         case 401:
-          throw "Erro: Não autorizado";
+          throw "Erro: Nao autorizado. Cheque os dados de login";
           break;
         default:
-          throw "Erro: sem informações do erro";
+          throw "Erro: Problema interno";
           break;
       }
     } catch (e) {

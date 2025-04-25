@@ -3,14 +3,11 @@ const fs = require("fs").promises;
 const path = require("node:path");
 const Event = require("./scripts/Event.js");
 const DB = require("./scripts/db.js");
-const Server = require("./scripts/server.js");
 
 let win = null;
 let exiting = false;
+
 const handleEvent = new Event(app);
-setInterval(() => {
-  handleEvent.cron();
-}, 1000 * 60 * 5);
 
 const createWindow = async () => {
   win = new BrowserWindow({
@@ -27,9 +24,9 @@ const createWindow = async () => {
 
   await handleEvent.checkLocalStorageFiles();
 
-  handleEvent.cron();
+  // handleEvent.cron();
 
-  win.loadFile("index.html");
+  win.loadFile(path.join(__dirname, "pages/index.html"));
 
   win.on("close", (event) => {
     if (!exiting) {
@@ -42,6 +39,10 @@ const createWindow = async () => {
     win = null;
   });
 };
+
+setInterval(() => {
+  handleEvent.cron();
+}, 1000 * 60 * 10);
 
 ipcMain.handle("getData", async (event, args) => {
   console.log("Argumentos: ", args);
@@ -62,15 +63,26 @@ ipcMain.handle("getInfo", async (event, args) => {
   return response_data;
 });
 
-ipcMain.on("sendDataToServer", async (event, data_inicio, data_fim) => {
-  await handleEvent.sendDataToServer(data_inicio, data_fim);
+ipcMain.handle("setLogin", async (event, args) => {
+  const response = await handleEvent.setLogin(args.email, args.password);
+  return response;
 });
-ipcMain.on("setLogin", async (event, email, password) => {
-  await handleEvent.setLogin(email, password);
+
+ipcMain.handle("sendDataToServer", async (event, args) => {
+  const response = await handleEvent.sendDataToServer(
+    args.data_inicio,
+    args.data_fim
+  );
+  return response;
 });
-ipcMain.on("setDBLogin", async (event, user, password, database) => {
+ipcMain.handle("setDBLogin", async (event, args) => {
   console.log("setting db login");
-  await handleEvent.setDBLogin(user, password, database);
+  const response = await handleEvent.setDBLogin(
+    args.user,
+    args.password,
+    args.database
+  );
+  return response;
 });
 
 let tray = null;
@@ -94,7 +106,7 @@ function closeWindow() {
 
 app.whenReady().then(() => {
   createWindow();
-  tray = new Tray("./assets/tray_icon.jpg");
+  tray = new Tray(path.join(__dirname, "public/images/tray_icon.jpg"));
   const contextMenu = Menu.buildFromTemplate([
     { label: "Mostrar", click: showWindow },
     { label: "Esconder", click: hideWindow },

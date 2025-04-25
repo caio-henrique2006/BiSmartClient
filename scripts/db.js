@@ -202,7 +202,7 @@ class DB {
         : 0;
     }
     const response = { [label]: value };
-    conn.end();
+    conn.end(); 
     return response;
   }
 

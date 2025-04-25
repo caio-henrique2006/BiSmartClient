@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BiSmart Clientes</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <header>
+      <img src="../public/images/logo.png" width="250px" />
+      <p class="main_title">BISMART CLIENTES</p>
+    </header>
+    <div class="card">
+      <p class="title">Ferramentas:</p>
+      <label>Forçar envio dos dados para o servidor</label>
+      <input type="date" id="sendData_data_inicio" />
+      <input type="date" id="sendData_data_fim" />
+      <button id="submit_sendData">Enviar</button>
+      <p id="status"></p>
+    </div>
+    <br />
+    <div class="card">
+      <p class="title">Dados de login:</p>
+      <br />
+      <p id="login_email"></p>
+      <p id="login_password"></p>
+      <br />
+      <button id="editar_login">Editar</button>
+    </div>
+    <br />
+    <div class="card">
+      <p class="title">Dados do banco de dados local:</p>
+      <br />
+      <p id="DB_user"></p>
+      <p id="DB_password"></p>
+      <p id="DB_database"></p>
+      <br />
+      <button id="editar_DB">Editar</button>
+    </div>
+    <script>
+      async function run() {
+        const response = await window.db.invoke("getInfo", "");
+        document.getElementById("login_email").innerHTML =
+          "<b>Email:</b> " + response.email;
+        document.getElementById("login_password").innerHTML =
+          "<b>Senha:</b> *******";
+        document.getElementById("DB_user").innerHTML =
+          "<b>User:</b> " + response.user;
+        document.getElementById("DB_password").innerHTML =
+          "<b>Senha:</b> *******";
+        document.getElementById("DB_database").innerHTML =
+          "<b>Banco de dados:</b> " + response.database;
+      }
+      document
+        .getElementById("submit_sendData")
+        .addEventListener("click", async () => {
+          document.getElementById("status").innerText = "Enviando...";
+          const response = await window.db.invoke("sendDataToServer", {
+            data_inicio: document.getElementById("sendData_data_inicio").value,
+            data_fim: document.getElementById("sendData_data_fim").value,
+          });
+          if (response) {
+            document.getElementById("status").innerText = response;
+          } else {
+            document.getElementById("status").innerText = "Erro...";
+          }
+        });
+      document.getElementById("editar_login").addEventListener("click", () => {
+        window.location.href = "update_login.html";
+      });
+      document.getElementById("editar_DB").addEventListener("click", () => {
+        window.location.href = "update_db.html";
+      });
+      run();
+    </script>
+  </body>
+</html>
