@@ -13,6 +13,7 @@ module.exports = {
         name: "BiSmartClientes",
         shortcutName: "BiSmart Clientes",
         setupIcon: "./public/images/smart.ico",
+        setupExe: "BiSmartClient.exe",
         noMsi: true,
       },
     },

@@ -4,8 +4,12 @@ const path = require("node:path");
 const Event = require("./scripts/Event.js");
 const DB = require("./scripts/db.js");
 
+require("update-electron-app")();
+
 let win = null;
 let exiting = false;
+
+console.log(process.env);
 
 const handleEvent = new Event(app);
 
