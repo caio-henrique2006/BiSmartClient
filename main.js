@@ -1,15 +1,13 @@
 const { app, BrowserWindow, ipcMain, Tray, Menu } = require("electron");
+const update = require("update-electron-app");
+update.updateElectronApp();
 const fs = require("fs").promises;
 const path = require("node:path");
 const Event = require("./scripts/Event.js");
 const DB = require("./scripts/db.js");
 
-require("update-electron-app")();
-
 let win = null;
 let exiting = false;
-
-console.log(process.env);
 
 const handleEvent = new Event(app);
 
@@ -20,6 +18,7 @@ const createWindow = async () => {
     show: false,
     autoHideMenuBar: true,
     title: "BISmart Clientes",
+    icon: path.join(__dirname, "public/images/tray_icon.jpg"),
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       devTools: true,
