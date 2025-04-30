@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BiSmart Clientes</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <header>
+      <img src="../public/images/logo.png" width="250px" />
+      <p class="main_title">BISMART CLIENTES</p>
+    </header>
+    <div class="card">
+      <p class="title">Dados de login:</p>
+      <label>Email: </label><br />
+      <input type="email" id="set_email" /><br />
+      <label>Senha: </label><br />
+      <input type="password" id="set_password" /><br />
+      <button id="submit_set_login">Salvar</button>
+    </div>
+    <button id="voltar">Voltar</button>
+    <script>
+      async function run() {
+        const response = await window.db.invoke("getInfo", "");
+        document.getElementById("set_email").value = response.email;
+        document.getElementById("set_password").value = "*******";
+      }
+      document
+        .getElementById("submit_set_login")
+        .addEventListener("click", async () => {
+          const email = document.getElementById("set_email").value;
+          const password = document.getElementById("set_password").value;
+          console.log(email, password);
+          const response = await window.db.invoke("setLogin", {
+            email: email,
+            password: password,
+          });
+          if (response) {
+            window.location.href = "index.html";
+          } else {
+            alert("Erro Salvando os dados");
+          }
+        });
+      document.getElementById("voltar").addEventListener("click", () => {
+        window.location.href = "index.html";
+      });
+      run();
+    </script>
+  </body>
+</html>

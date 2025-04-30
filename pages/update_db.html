@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BiSmart Clientes</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <header>
+      <img src="../public/images/logo.png" width="250px" />
+      <p class="main_title">BISMART CLIENTES</p>
+    </header>
+    <div class="card">
+      <p class="title">Dados do banco de dados local:</p>
+      <label>User: </label><br />
+      <input type="text" id="set_db_user" /><br />
+      <label>Senha: </label><br />
+      <input type="text" id="set_db_password" /><br />
+      <label>Database: </label><br />
+      <input type="text" id="set_db_database" /><br />
+      <button id="submit_set_localdb">Salvar</button>
+    </div>
+    <button id="voltar">Voltar</button>
+    <script>
+      async function run() {
+        const response = await window.db.invoke("getInfo", "");
+        document.getElementById("set_db_user").value = response.user;
+        document.getElementById("set_db_password").value = "*********";
+        document.getElementById("set_db_database").value = response.database;
+      }
+      document
+        .getElementById("submit_set_localdb")
+        .addEventListener("click", async () => {
+          const user = document.getElementById("set_db_user").value;
+          const password = document.getElementById("set_db_password").value;
+          const database = document.getElementById("set_db_database").value;
+          console.log(user, password, database);
+          const response = await window.db.invoke("setDBLogin", {
+            user: user,
+            passowd: password,
+            database: database,
+          });
+          if (response) {
+            window.location.href = "index.html";
+          } else {
+            alert("Erro Salvando os dados");
+          }
+        });
+      document.getElementById("voltar").addEventListener("click", () => {
+        window.location.href = "index.html";
+      });
+      run();
+    </script>
+  </body>
+</html>
