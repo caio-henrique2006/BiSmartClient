@@ -64,13 +64,40 @@ class DB {
     AND mo.emissao <= ?
     AND LOCATE(LEFT(RPAD(mo.cancelada,1,' '),1),QUOTE('SC')) = 0
     GROUP BY gp.descr`,
-    tributacao: `SELECT 
-    COUNT(CASE WHEN produtos.cst = 102 THEN 1 END) AS quantidade_tributado,
-    COUNT(CASE WHEN produtos.cst != 102 THEN 1 END) AS quantidade_substituido
-    FROM produtos 
-    INNER JOIN moventp ON produtos.codigo = moventp.produto 
-    INNER JOIN movent ON moventp.docum = movent.docum 
-    WHERE chegada >= ? and chegada <= ?
+    quantidade_compras_nao_efetivadas: `SELECT count(*) as quantidade_compras_nao_efetivadas 
+    FROM movent movent1, moventp moventp1,fornecedor fornecedor1,filial filial1,natoper natoper1,produtos produtos1 
+    WHERE movent1.row_id=moventp1.autoincr and 
+    movent1.fornec=fornecedor1.codigo and 
+    movent1.filial=filial1.filial AND 
+    moventp1.produto=produtos1.codigo AND
+    movent1.natoper = natoper1.codigo AND 
+    LOCATE(LEFT(RPAD(movent1.cancelada,1," "),1),QUOTE("SC")) = 0 AND
+    movent1.filial = '01' 
+    AND movent1.efetivado <> 'S' 
+    AND LOCATE(LEFT(RPAD(natoper1.tipomov,1," "),1),QUOTE("COF")) > 0 
+    AND movent1.chegada >= ? 
+    AND movent1.chegada <= ?`,
+    tributacao_vendas: `SELECT 
+    COUNT(CASE WHEN movvendasp1.cst = 102 THEN 1 END) AS quantidade_tributado,
+    COUNT(CASE WHEN movvendasp1.cst != 102 THEN 1 END) AS quantidade_substituido
+    FROM movvendas movvendas1,movvendasp movvendasp1,cliente cliente1,natoper natoper1,
+    filial filial1,vend vend1 WHERE movvendas1.row_id=movvendasp1.autoincr and 
+    movvendas1.cliente=cliente1.codigo AND movvendas1.natoper = natoper1.codigo and 
+    movvendas1.filial=filial1.filial AND LOCATE(LEFT(RPAD(natoper1.tipomov,1," "),1),QUOTE("OVDG")) > 0 AND 
+    movvendas1.vendedor=vend1.codigo AND LOCATE(LEFT(RPAD(movvendas1.cancelada,1," "),1),QUOTE("SC")) = 0 AND 
+    movvendas1.serie <> "" AND Movvendas1.Filial = '01' AND movvendas1.emissao >= ? AND 
+    movvendas1.emissao <= ? ORDER BY movvendas1.emissao,movvendas1.docum
+    `,
+    tributacao_compras: `SELECT 
+    COUNT(CASE WHEN moventp1.cst = 102 THEN 1 END) AS quantidade_tributado,
+    COUNT(CASE WHEN moventp1.cst != 102 THEN 1 END) AS quantidade_substituido
+    FROM movent movent1, moventp moventp1,fornecedor fornecedor1,filial filial1,natoper natoper1,
+    produtos produtos1 WHERE movent1.row_id=moventp1.autoincr and movent1.fornec=fornecedor1.codigo and 
+    movent1.filial=filial1.filial AND moventp1.produto=produtos1.codigo AND 
+    movent1.natoper = natoper1.codigo AND LOCATE(LEFT(RPAD(movent1.cancelada,1," "),1),QUOTE("SC")) = 0 AND
+    movent1.filial = '01' AND LOCATE(LEFT(RPAD(natoper1.tipomov,1," "),1),QUOTE("COF")) > 0 AND 
+    movent1.chegada >= '2025-01-01' AND movent1.chegada <= '2025-01-31' 
+    ORDER BY movent1.chegada,movent1.docum,movent1.nota2
     `,
   };
 
@@ -162,9 +189,20 @@ class DB {
       parameters,
       true
     );
-    const tributacao = await this.executeSQLCommand(
-      "tributacao",
-      this.#SQL_commands.tributacao,
+    const quantidade_compras_nao_efetivadas = await this.executeSQLCommand(
+      "quantidade_compras_nao_efetivadas",
+      this.#SQL_commands.quantidade_compras_nao_efetivadas,
+      parameters
+    );
+    const tributacao_vendas = await this.executeSQLCommand(
+      "tributacao_vendas",
+      this.#SQL_commands.tributacao_vendas,
+      parameters,
+      true
+    );
+    const tributacao_compras = await this.executeSQLCommand(
+      "tributacao_compras",
+      this.#SQL_commands.tributacao_compras,
       parameters,
       true
     );
@@ -176,7 +214,9 @@ class DB {
       quantidade_vendas,
       quantidade_compras,
       vendas_grupo,
-      tributacao,
+      quantidade_compras_nao_efetivadas,
+      tributacao_vendas,
+      tributacao_compras,
       {
         data: parameters[0],
       }
@@ -202,7 +242,7 @@ class DB {
         : 0;
     }
     const response = { [label]: value };
-    conn.end(); 
+    conn.end();
     return response;
   }
 
