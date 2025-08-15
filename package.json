@@ -37,6 +37,7 @@
   },
   "dependencies": {
     "date-fns": "^4.1.0",
+    "electron-log": "^5.4.2",
     "electron-squirrel-startup": "^1.0.1",
     "mysql": "^2.18.1",
     "mysql2": "^3.12.0",

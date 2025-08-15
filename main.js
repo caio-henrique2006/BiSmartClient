@@ -1,6 +1,8 @@
 const { app, BrowserWindow, ipcMain, Tray, Menu } = require("electron");
-const update = require("update-electron-app");
-update.updateElectronApp();
+const { updateElectronApp } = require("update-electron-app");
+updateElectronApp({
+  logger: require("electron-log"),
+});
 const fs = require("fs").promises;
 const path = require("node:path");
 const Event = require("./scripts/Event.js");
@@ -27,7 +29,7 @@ const createWindow = async () => {
 
   await handleEvent.checkLocalStorageFiles();
 
-  handleEvent.cron();
+  // handleEvent.cron();
 
   win.loadFile(path.join(__dirname, "pages/index.html"));
 
@@ -42,7 +44,7 @@ const createWindow = async () => {
     win = null;
   });
 };
-
+// handleEvent.cron();
 setInterval(() => {
   handleEvent.cron();
 }, 1000 * 60 * 20);
