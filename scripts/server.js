@@ -29,6 +29,9 @@ class Server {
   async sendDataToServer(data) {
     try {
       console.log("URL: ", this.#server_url + this.#server_route);
+      console.log("Email: ", this.#email);
+      console.log("Password: ", this.#password);
+      console.log("DATA: ", data);
       const response = await fetch(this.#server_url + this.#server_route, {
         method: "POST",
         mode: "cors",
@@ -41,16 +44,15 @@ class Server {
       });
       // console.log(await response.text());
       const response_data = await response.json();
-      switch (response_data.status) {
+      console.log(response_data);
+      console.log(response.status);
+      switch (response.status) {
         case 200:
           return "Enviado com sucesso";
-          break;
         case 401:
           throw "Erro: Nao autorizado. Cheque os dados de login";
-          break;
         default:
           throw "Erro: Problema interno";
-          break;
       }
     } catch (e) {
       return e;
