@@ -1,7 +1,9 @@
 const { app, BrowserWindow, ipcMain, Tray, Menu } = require("electron");
 const { updateElectronApp } = require("update-electron-app");
+const { autoUpdater } = require("electron-updater");
+const log = require("electron-log");
 updateElectronApp({
-  logger: require("electron-log"),
+  logger: log,
 });
 const fs = require("fs").promises;
 const path = require("node:path");
@@ -90,8 +92,6 @@ ipcMain.handle("setDBLogin", async (event, args) => {
   return response;
 });
 
-let tray = null;
-
 function showWindow() {
   if (!win) createWindow();
   win.show();
@@ -108,6 +108,20 @@ function closeWindow() {
   exiting = true;
   app.quit();
 }
+
+let tray = null;
+
+autoUpdater.logger = log;
+autoUpdater.logger.transports.file.level = "info";
+autoUpdater.on("update-downloaded", () => {
+  log.info("Update downloaded. Installing now...");
+
+  if (tray) {
+    tray.destroy();
+  }
+
+  autoUpdater.quitAndInstall(true, true);
+});
 
 app.whenReady().then(() => {
   createWindow();
