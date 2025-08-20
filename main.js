@@ -1,10 +1,10 @@
 const { app, BrowserWindow, ipcMain, Tray, Menu } = require("electron");
-// const { updateElectronApp } = require("update-electron-app");
+const { updateElectronApp } = require("update-electron-app");
 const { autoUpdater } = require("electron-updater");
 const log = require("electron-log");
-// updateElectronApp({
-//   logger: require("electron-log"),
-// });
+updateElectronApp({
+  logger: log,
+});
 const fs = require("fs").promises;
 const path = require("node:path");
 const Event = require("./scripts/Event.js");
