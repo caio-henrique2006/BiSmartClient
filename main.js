@@ -4,7 +4,23 @@ const { autoUpdater } = require("electron-updater");
 const log = require("electron-log");
 updateElectronApp({
   logger: log,
+  updateOnDownload: false,
 });
+let tray = null;
+
+autoUpdater.logger = log;
+autoUpdater.logger.transports.file.level = "info";
+log.info("My custom 'update-downloaded' handler is running (ME)");
+autoUpdater.on("update-downloaded", () => {
+  log.info("Update downloaded. Installing now... (ME)");
+
+  if (tray) {
+    tray.destroy();
+  }
+
+  autoUpdater.quitAndInstall(true, true);
+});
+
 const fs = require("fs").promises;
 const path = require("node:path");
 const Event = require("./scripts/Event.js");
@@ -108,20 +124,6 @@ function closeWindow() {
   exiting = true;
   app.quit();
 }
-
-let tray = null;
-
-autoUpdater.logger = log;
-autoUpdater.logger.transports.file.level = "info";
-autoUpdater.on("update-downloaded", () => {
-  log.info("Update downloaded. Installing now...");
-
-  if (tray) {
-    tray.destroy();
-  }
-
-  autoUpdater.quitAndInstall(true, true);
-});
 
 app.whenReady().then(() => {
   createWindow();
