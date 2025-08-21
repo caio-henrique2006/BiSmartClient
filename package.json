@@ -1,14 +1,31 @@
 {
   "name": "bismartcliente",
   "productName": "BiSmartClient",
-  "version": "1.0.12",
+  "version": "1.0.14",
   "description": "BISMART versão para clientes",
   "main": "main.js",
   "scripts": {
-    "start": "electron-forge start",
-    "test": "node ./_test/_handleDate.js",
-    "package": "electron-forge package",
-    "make": "electron-forge make"
+    "start": "electron .",
+    "build": "electron-builder"
+  },
+  "build": {
+    "appId": "com.yourapp.id",
+    "files": [
+      "**/*"
+    ],
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "caio-henrique2006",
+        "repo": "BiSmartClient"
+      }
+    ]
   },
   "repository": {
     "type": "git",
@@ -25,7 +42,6 @@
   },
   "homepage": "https://github.com/caio-henrique2006/BiSmartClient#readme",
   "devDependencies": {
-    "@electron-forge/cli": "^7.8.0",
     "@electron-forge/maker-deb": "^7.8.0",
     "@electron-forge/maker-rpm": "^7.8.0",
     "@electron-forge/maker-squirrel": "^7.8.0",
@@ -33,7 +49,8 @@
     "@electron-forge/plugin-auto-unpack-natives": "^7.8.0",
     "@electron-forge/plugin-fuses": "^7.8.0",
     "@electron/fuses": "^1.8.0",
-    "electron": "^33.2.1"
+    "electron": "^33.2.1",
+    "electron-builder": "^26.0.12"
   },
   "dependencies": {
     "date-fns": "^4.1.0",
