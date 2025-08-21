@@ -1,11 +1,6 @@
 const { app, BrowserWindow, ipcMain, Tray, Menu } = require("electron");
-const { updateElectronApp } = require("update-electron-app");
 const { autoUpdater } = require("electron-updater");
 const log = require("electron-log");
-updateElectronApp({
-  logger: log,
-  updateOnDownload: false,
-});
 let tray = null;
 
 autoUpdater.logger = log;
@@ -19,6 +14,18 @@ autoUpdater.on("update-downloaded", () => {
   }
 
   autoUpdater.quitAndInstall(true, true);
+});
+
+autoUpdater.on("update-available", () => {
+  log.info("Update is available!");
+});
+
+autoUpdater.on("update-not-available", () => {
+  log.info("No update available.");
+});
+
+autoUpdater.on("error", (err) => {
+  log.error("Updater error:", err);
 });
 
 const fs = require("fs").promises;
@@ -126,6 +133,7 @@ function closeWindow() {
 }
 
 app.whenReady().then(() => {
+  autoUpdater.checkForUpdatesAndNotify();
   createWindow();
   tray = new Tray(path.join(__dirname, "public/images/tray_icon.jpg"));
   const contextMenu = Menu.buildFromTemplate([
