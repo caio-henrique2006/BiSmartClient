@@ -1,7 +1,7 @@
 {
   "name": "bismartcliente",
   "productName": "BiSmartClient",
-  "version": "1.0.15",
+  "version": "1.0.16",
   "description": "BISMART versão para clientes",
   "main": "main.js",
   "scripts": {
