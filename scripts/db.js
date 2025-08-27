@@ -23,6 +23,23 @@ class DB {
     AND LOCATE(LEFT(RPAD(movvendas1.cancelada,1," "),1),QUOTE("SC")) = 0 
     AND LENGTH(movvendas1.docum) <> 11 AND Movvendas1.Filial = '01' 
     AND movvendas1.emissao >= ? AND movvendas1.emissao <= ? `,
+    forma_vendas: `
+    SELECT 
+        formapg1.descr AS forma_pagamento,
+        SUM(formapg1.valor) AS valor_total
+    FROM movvendas movvendas1
+    JOIN formapg formapg1 
+      ON formapg1.docum = movvendas1.docum
+    JOIN natoper natoper1 
+      ON movvendas1.natoper = natoper1.codigo
+    WHERE LOCATE(LEFT(RPAD(natoper1.tipomov,1," "),1),QUOTE("OVDG")) > 0 
+      AND LOCATE(LEFT(RPAD(movvendas1.cancelada,1," "),1),QUOTE("SC")) = 0 
+      AND LENGTH(movvendas1.docum) <> 11 
+      AND movvendas1.filial = '01'
+      AND formapg1.emissao BETWEEN ? AND ?
+      AND movvendas1.emissao BETWEEN ? AND ?
+    GROUP BY formapg1.descr
+    `,
     valor_compras: `SELECT sum(totgeral) FROM movent WHERE cancelada != 'S' AND chegada BETWEEN ? AND ?;`,
     quantidade_itens_vendidos: `SELECT sum(qtde) FROM movvendas mo USE INDEX (idx_movvendas_6),movvendasp mp, 
     produtos po,natoper na WHERE mo.row_id=mp.autoincr 
@@ -163,6 +180,12 @@ class DB {
       this.#SQL_commands.valor_vendas,
       parameters
     );
+    const forma_vendas = await this.executeSQLCommand(
+      "forma_vendas",
+      this.#SQL_commands.forma_vendas,
+      parameters,
+      { repeat_parameters: true, keep_structure: true }
+    );
     const valor_compras = await this.executeSQLCommand(
       "valor_compras",
       this.#SQL_commands.valor_compras,
@@ -187,7 +210,9 @@ class DB {
       "vendas_grupo",
       this.#SQL_commands.vendas_grupo,
       parameters,
-      true
+      {
+        keep_structure: true,
+      }
     );
     const quantidade_compras_nao_efetivadas = await this.executeSQLCommand(
       "quantidade_compras_nao_efetivadas",
@@ -209,6 +234,7 @@ class DB {
     const data = Object.assign(
       {},
       valor_vendas,
+      forma_vendas,
       valor_compras,
       quantidade_itens_vendidos,
       quantidade_vendas,
@@ -228,13 +254,19 @@ class DB {
     label,
     command,
     parameters = "",
-    keep_structure = false
+    config = {
+      keep_structure: false,
+      repeat_parameters: false,
+    }
   ) {
     const conn = await this.#connect();
-    let [rows, fields] = await conn.query(command, parameters);
+    const format_parameters = config.repeat_parameters
+      ? parameters.concat(parameters)
+      : parameters;
+    let [rows, fields] = await conn.query(command, format_parameters);
     console.log(label, rows);
     let value;
-    if (keep_structure) {
+    if (config.keep_structure) {
       value = rows;
     } else {
       value = rows?.[0]?.[Object.keys(rows[0])[0]]
