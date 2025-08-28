@@ -113,7 +113,7 @@ class DB {
     movent1.filial=filial1.filial AND moventp1.produto=produtos1.codigo AND 
     movent1.natoper = natoper1.codigo AND LOCATE(LEFT(RPAD(movent1.cancelada,1," "),1),QUOTE("SC")) = 0 AND
     movent1.filial = '01' AND LOCATE(LEFT(RPAD(natoper1.tipomov,1," "),1),QUOTE("COF")) > 0 AND 
-    movent1.chegada >= '2025-01-01' AND movent1.chegada <= '2025-01-31' 
+    movent1.chegada >= ? AND movent1.chegada <= ?
     ORDER BY movent1.chegada,movent1.docum,movent1.nota2
     `,
   };
@@ -223,13 +223,17 @@ class DB {
       "tributacao_vendas",
       this.#SQL_commands.tributacao_vendas,
       parameters,
-      true
+      {
+        keep_structure: true,
+      }
     );
     const tributacao_compras = await this.executeSQLCommand(
       "tributacao_compras",
       this.#SQL_commands.tributacao_compras,
       parameters,
-      true
+      {
+        keep_structure: true,
+      }
     );
     const data = Object.assign(
       {},
