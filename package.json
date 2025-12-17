@@ -1,7 +1,7 @@
 {
   "name": "bismartcliente",
   "productName": "BiSmartClient",
-  "version": "1.0.16",
+  "version": "1.0.18",
   "description": "BISMART versão para clientes",
   "main": "main.js",
   "scripts": {
@@ -9,9 +9,20 @@
     "build": "electron-builder"
   },
   "build": {
-    "appId": "com.yourapp.id",
+    "appId": "com.smart.bismartclient",
+    "asar": true,
     "files": [
-      "**/*"
+      "main.js",
+      "preload.js",
+      "scripts/**/*",
+      "pages/**/*",
+      "public/**/*",
+      "node_modules/**/*",
+      "package.json",
+      "!dist/**",
+      "!**/*.map",
+      "!**/*.md",
+      "!out/**"
     ],
     "directories": {
       "output": "dist"
@@ -25,7 +36,8 @@
         "owner": "caio-henrique2006",
         "repo": "BiSmartClient"
       }
-    ]
+    ],
+    "compression": "maximum"
   },
   "repository": {
     "type": "git",
