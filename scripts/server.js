@@ -6,7 +6,7 @@ class Server {
   #email = "";
   #password = "";
   #server_url = "";
-  #server_route = "client_send";
+  #server_route = "client_send?client_origin=desktop";
 
   constructor() {
     this.init();
