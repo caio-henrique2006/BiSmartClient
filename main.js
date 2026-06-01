@@ -69,28 +69,22 @@ const createWindow = async () => {
     win = null;
   });
 };
+
 // handleEvent.cron();
 // setInterval(() => {
 //   handleEvent.cron();
 // }, 1000 * 60 * 20);
 
-ipcMain.handle("getData", async (event, args) => {
-  console.log("Argumentos: ", args);
-  const db = new DB();
-  const data_arr = await db.getData(args.data_inicio, args.data_fim);
-  return data_arr;
-});
-
 ipcMain.handle("getInfo", async (event, args) => {
   const path_userData = app.getPath("userData");
   const storage_server_path = path.join(path_userData, "server_login.json");
   const storage_db_path = path.join(path_userData, "db_login.json");
-  const server_data = JSON.parse(
+  const server_info = JSON.parse(
     await fs.readFile(storage_server_path, "utf-8")
-  );
-  const db_data = JSON.parse(await fs.readFile(storage_db_path, "utf-8"));
-  const response_data = { ...server_data, ...db_data };
-  return response_data;
+  )
+  const db_info = JSON.parse(await fs.readFile(storage_db_path, "utf-8"));
+  const response = { ...server_info, ...db_info };
+  return response;
 });
 
 ipcMain.handle("setLogin", async (event, args) => {

@@ -29,22 +29,4 @@ const util = {
   },
 };
 
-/*
-Object.keys(data).forEach((key) => {
-    if (summed_obj[key]) {
-      if (
-        typeof summed_obj[key] == "number" &&
-        typeof data[key] == "number"
-      ) {
-        summed_obj[key] += data[key];
-      } else if (typeof summed_obj[key] == "object") {
-        summed_obj[key] = this.#recur_sum_data(summed_obj[key], data[key]);
-      }
-    } else {
-      summed_obj[key] = data[key];
-    }
-  });
-  return summed_obj;
-*/
-
 module.exports = util;

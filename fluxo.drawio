@@ -1,0 +1,85 @@
+<mxfile host="Electron">
+  <diagram name="Página-1" id="Rf0gHXhZYalZziIgHSze">
+    <mxGraphModel dx="1030" dy="634" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="PzJbQxYTMJMfj_Ksv1QC-4" edge="1" parent="1" source="PzJbQxYTMJMfj_Ksv1QC-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="PzJbQxYTMJMfj_Ksv1QC-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PzJbQxYTMJMfj_Ksv1QC-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Cliente faz pedido para salvar novos dados de conexão" vertex="1">
+          <mxGeometry height="60" width="160" x="40" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="PzJbQxYTMJMfj_Ksv1QC-6" edge="1" parent="1" source="PzJbQxYTMJMfj_Ksv1QC-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="PzJbQxYTMJMfj_Ksv1QC-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PzJbQxYTMJMfj_Ksv1QC-3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Sistema recebe o pedido" vertex="1">
+          <mxGeometry height="60" width="160" x="40" y="170" as="geometry" />
+        </mxCell>
+        <mxCell id="PzJbQxYTMJMfj_Ksv1QC-8" edge="1" parent="1" source="PzJbQxYTMJMfj_Ksv1QC-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="PzJbQxYTMJMfj_Ksv1QC-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PzJbQxYTMJMfj_Ksv1QC-5" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Sistema pega os &quot;paths&quot; de storage" vertex="1">
+          <mxGeometry height="60" width="160" x="40" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="PzJbQxYTMJMfj_Ksv1QC-10" edge="1" parent="1" source="PzJbQxYTMJMfj_Ksv1QC-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="PzJbQxYTMJMfj_Ksv1QC-9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PzJbQxYTMJMfj_Ksv1QC-7" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Sistema reescreve novos dados no path de storage" vertex="1">
+          <mxGeometry height="60" width="160" x="40" y="350" as="geometry" />
+        </mxCell>
+        <mxCell id="PzJbQxYTMJMfj_Ksv1QC-9" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Sistema retorna booleano true se foi sucesso e falso caso tenha dado errado." vertex="1">
+          <mxGeometry height="60" width="160" x="40" y="440" as="geometry" />
+        </mxCell>
+        <mxCell id="PzJbQxYTMJMfj_Ksv1QC-15" edge="1" parent="1" source="PzJbQxYTMJMfj_Ksv1QC-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="PzJbQxYTMJMfj_Ksv1QC-14">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PzJbQxYTMJMfj_Ksv1QC-11" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Cliente faz requisição com data para envio, ou o cron faz o pedido" vertex="1">
+          <mxGeometry height="60" width="160" x="440" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="PzJbQxYTMJMfj_Ksv1QC-12" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Salvamento de dados de conexão" vertex="1">
+          <mxGeometry height="30" width="160" x="40" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="PzJbQxYTMJMfj_Ksv1QC-13" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Envio de novos dados" vertex="1">
+          <mxGeometry height="30" width="160" x="440" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="PzJbQxYTMJMfj_Ksv1QC-18" edge="1" parent="1" source="PzJbQxYTMJMfj_Ksv1QC-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="PzJbQxYTMJMfj_Ksv1QC-16">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PzJbQxYTMJMfj_Ksv1QC-14" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Sistema recebe o pedido" vertex="1">
+          <mxGeometry height="60" width="160" x="440" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="PzJbQxYTMJMfj_Ksv1QC-21" edge="1" parent="1" source="PzJbQxYTMJMfj_Ksv1QC-16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="PzJbQxYTMJMfj_Ksv1QC-19">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PzJbQxYTMJMfj_Ksv1QC-16" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Sistema estabelece o tipo do banco de dados" vertex="1">
+          <mxGeometry height="60" width="160" x="440" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="PzJbQxYTMJMfj_Ksv1QC-22" edge="1" parent="1" source="PzJbQxYTMJMfj_Ksv1QC-19" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="PzJbQxYTMJMfj_Ksv1QC-20">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PzJbQxYTMJMfj_Ksv1QC-19" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Sistema estabelece um singleton de conexão com o db" vertex="1">
+          <mxGeometry height="60" width="160" x="440" y="350" as="geometry" />
+        </mxCell>
+        <mxCell id="PzJbQxYTMJMfj_Ksv1QC-24" edge="1" parent="1" source="PzJbQxYTMJMfj_Ksv1QC-20" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="PzJbQxYTMJMfj_Ksv1QC-23">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PzJbQxYTMJMfj_Ksv1QC-20" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Sistema faz a busca completa dos novos dados pontualmente para cada mês na data da requisição" vertex="1">
+          <mxGeometry height="60" width="160" x="440" y="440" as="geometry" />
+        </mxCell>
+        <mxCell id="PzJbQxYTMJMfj_Ksv1QC-26" edge="1" parent="1" source="PzJbQxYTMJMfj_Ksv1QC-23" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="PzJbQxYTMJMfj_Ksv1QC-25">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PzJbQxYTMJMfj_Ksv1QC-23" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Sistema compara se há mudanças com os dados em cache" vertex="1">
+          <mxGeometry height="60" width="160" x="660" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="PzJbQxYTMJMfj_Ksv1QC-25" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Se não há mudanças o&amp;nbsp;" vertex="1">
+          <mxGeometry height="60" width="160" x="830" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="PzJbQxYTMJMfj_Ksv1QC-27" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Se há mudanças" vertex="1">
+          <mxGeometry height="60" width="160" x="660" y="160" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
