@@ -1,8 +1,10 @@
 const { app, BrowserWindow, ipcMain, Tray, Menu } = require("electron");
 const { autoUpdater } = require("electron-updater");
+const storage = require("./scripts/storage.js");
 const log = require("electron-log");
 let tray = null;
 
+// Atualização remota
 autoUpdater.logger = log;
 autoUpdater.logger.transports.file.level = "info";
 log.info("My custom 'update-downloaded' handler is running (ME)");
@@ -28,6 +30,7 @@ autoUpdater.on("error", (err) => {
   log.error("Updater error:", err);
 });
 
+// Definição base
 const fs = require("fs").promises;
 const path = require("node:path");
 const Event = require("./scripts/Event.js");
@@ -75,20 +78,11 @@ const createWindow = async () => {
 //   handleEvent.cron();
 // }, 1000 * 60 * 20);
 
+// Serviços
 ipcMain.handle("getInfo", async (event, args) => {
-  const path_userData = app.getPath("userData");
-  const storage_server_path = path.join(path_userData, "server_login.json");
-  const storage_db_path = path.join(path_userData, "db_login.json");
-  const server_info = JSON.parse(
-    await fs.readFile(storage_server_path, "utf-8")
-  )
-  const db_info = JSON.parse(await fs.readFile(storage_db_path, "utf-8"));
+  const server_info = await storage.getServerInfo(app);
+  const db_info = await storage.getDBInfo(app);
   const response = { ...server_info, ...db_info };
-  return response;
-});
-
-ipcMain.handle("setLogin", async (event, args) => {
-  const response = await handleEvent.setLogin(args.email, args.password);
   return response;
 });
 
@@ -99,6 +93,12 @@ ipcMain.handle("sendDataToServer", async (event, args) => {
   );
   return response;
 });
+
+ipcMain.handle("setLogin", async (event, args) => {
+  const response = await handleEvent.setLogin(args.email, args.password);
+  return response;
+});
+
 ipcMain.handle("setDBLogin", async (event, args) => {
   console.log("setting db login");
   const response = await handleEvent.setDBLogin(
@@ -109,6 +109,7 @@ ipcMain.handle("setDBLogin", async (event, args) => {
   return response;
 });
 
+// Funções da janela
 function showWindow() {
   if (!win) createWindow();
   win.show();
@@ -126,6 +127,7 @@ function closeWindow() {
   app.quit();
 }
 
+// Rotina de inicialização
 app.whenReady().then(() => {
   autoUpdater.checkForUpdatesAndNotify();
   createWindow();
