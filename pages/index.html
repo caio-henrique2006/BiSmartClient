@@ -35,6 +35,7 @@
       <p id="DB_user"></p>
       <p id="DB_password"></p>
       <p id="DB_database"></p>
+      <p id="DB_sistema"></p>
       <br />
       <button id="editar_DB">Editar</button>
     </div>
@@ -51,6 +52,8 @@
           "<b>Senha:</b> *******";
         document.getElementById("DB_database").innerHTML =
           "<b>Banco de dados:</b> " + response.database;
+        document.getElementById("DB_sistema").innerHTML =
+          "<b>Sistema:</b> " + response.system;
       }
       document
         .getElementById("submit_sendData")

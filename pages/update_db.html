@@ -19,6 +19,8 @@
       <input type="text" id="set_db_password" /><br />
       <label>Database: </label><br />
       <input type="text" id="set_db_database" /><br />
+      <label>system: </label><br />
+      <input type="text" id="set_db_system" /><br />
       <button id="submit_set_localdb">Salvar</button>
     </div>
     <button id="voltar">Voltar</button>
@@ -28,6 +30,7 @@
         document.getElementById("set_db_user").value = response.user;
         document.getElementById("set_db_password").value = "*********";
         document.getElementById("set_db_database").value = response.database;
+        document.getElementById("set_db_system").value = response.system;
       }
       document
         .getElementById("submit_set_localdb")
@@ -35,11 +38,13 @@
           const user = document.getElementById("set_db_user").value;
           const password = document.getElementById("set_db_password").value;
           const database = document.getElementById("set_db_database").value;
-          console.log(user, password, database);
+          const system = document.getElementById("set_db_system").value;
+          console.log(user, password, database, system);
           const response = await window.db.invoke("setDBLogin", {
             user: user,
-            passowd: password,
+            password: password,
             database: database,
+            system: system,
           });
           if (response) {
             window.location.href = "index.html";

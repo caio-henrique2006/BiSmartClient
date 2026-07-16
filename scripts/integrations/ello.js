@@ -1,10 +1,10 @@
 const { app } = require("electron");
 const mysql = require("mysql2/promise");
-const handleDate = require("./handleDate.js");
+const handleDate = require("../handleDate.js");
 const fs = require("fs");
 const path = require("node:path");
 
-class DB {
+class Ello {
   #connection_data = {
     host: "",
     user: "",
@@ -136,7 +136,7 @@ class DB {
     }
   }
 
-  async getData(data_inicio, data_fim) {
+  async getLocalData(data_inicio, data_fim) {
     try {
       // console.log(this.#connection_data);
       // console.log(data_inicio, data_fim);
@@ -286,4 +286,4 @@ class DB {
   }
 }
 
-module.exports = DB;
+module.exports = Ello;

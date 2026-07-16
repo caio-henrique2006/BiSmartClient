@@ -27,30 +27,6 @@ class Event {
     this.cache_file_path = path.join(this.userData_path, "cache.json");
   }
 
-  async checkLocalStorageFiles() {
-    console.log("Checking local storage files...");
-    if (!existsSync(this.db_file_path)) {
-      const db_data = {
-        user: "root",
-        password: "",
-        database: "geral",
-      };
-      await fs.writeFile(this.db_file_path, JSON.stringify(db_data));
-    }
-    if (!existsSync(this.server_file_path)) {
-      const server_data = {
-        email: "email@",
-        password: "*",
-        server_url: "https://bi-smart-server.vercel.app/",
-      };
-      await fs.writeFile(this.server_file_path, JSON.stringify(server_data));
-    }
-    if (!existsSync(this.cache_file_path)) {
-      const cache = {};
-      await fs.writeFile(this.cache_file_path, JSON.stringify(cache));
-    }
-  }
-
   async sendDataToServer(data_inicio, data_fim, cache_data = false) {
     console.log("Sending data to server...");
     const db = new DB();
@@ -67,38 +43,6 @@ class Event {
       console.log("Dados enviados: ", response);
     }
     return response;
-  }
-
-  async setLogin(email, password) {
-    console.log("Setting server login data...");
-    const current_server_data = JSON.parse(
-      await fs.readFile(this.server_file_path, "utf8")
-    );
-    const new_data = JSON.parse(JSON.stringify(current_server_data));
-    new_data.email = email;
-    new_data.password = password;
-    await fs.writeFile(this.server_file_path, JSON.stringify(new_data));
-    console.log("Salvo novos dados de login");
-    return "Dados Salvos";
-  }
-
-  async setDBLogin(user, password, database) {
-    console.log("Setting DB login data...");
-    try {
-      const current_db_data = JSON.parse(
-        await fs.readFile(this.db_file_path, "utf8")
-      );
-      const new_data = JSON.parse(JSON.stringify(current_db_data));
-      new_data.user = user;
-      new_data.password = password;
-      new_data.database = database;
-      await fs.writeFile(this.db_file_path, JSON.stringify(new_data));
-      console.log("Salvo novos dados de acesso ao banco de dados");
-    } catch (e) {
-      console.log("ERRO AO SALVAR DADOS DE LOGIN");
-      console.log(e);
-    }
-    return "Dados Salvos";
   }
 
   async cron() {

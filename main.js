@@ -1,5 +1,7 @@
 const { app, BrowserWindow, ipcMain, Tray, Menu } = require("electron");
 const { autoUpdater } = require("electron-updater");
+const { Ello } = require("./scripts/integrations/ello.js");
+const { Acesse } = require("./scripts/integrations/acesse.js");
 const storage = require("./scripts/storage.js");
 const log = require("electron-log");
 let tray = null;
@@ -55,7 +57,7 @@ const createWindow = async () => {
     },
   });
 
-  await handleEvent.checkLocalStorageFiles();
+  await storage.checkLocalStorageFiles(app);
 
   // handleEvent.cron();
 
@@ -87,24 +89,40 @@ ipcMain.handle("getInfo", async (event, args) => {
 });
 
 ipcMain.handle("sendDataToServer", async (event, args) => {
-  const response = await handleEvent.sendDataToServer(
-    args.data_inicio,
-    args.data_fim
-  );
-  return response;
+  const server = new Server();
+  const db_info = await storage.getDBInfo(app);
+  const system = db_info.system;
+  switch (system) {
+    case "Ello":
+      const ello = new Ello();
+      const ello_data = await ello.getLocalData(args.data_inicio, args.data_fim);
+      const ello_response = await server.sendDataToServer(ello_data);
+      return ello_response;
+      break;
+    case "Acesse":
+      const acesse = new Acesse();
+      const acesse_data = await acesse.getLocalData(args.data_inicio, args.data_fim);
+      const acesse_response = await server.sendDataToServer(acesse_data);
+      return acesse_response;
+      break;
+    default:
+      return "Sistema não suportado. Cheque as configurações do banco de dados.";
+      break;
+  }
 });
 
 ipcMain.handle("setLogin", async (event, args) => {
-  const response = await handleEvent.setLogin(args.email, args.password);
+  const response = await storage.setServerInfo(app, args.email, args.password);
   return response;
 });
 
 ipcMain.handle("setDBLogin", async (event, args) => {
-  console.log("setting db login");
-  const response = await handleEvent.setDBLogin(
+  const response = await storage.setDBInfo(
+    app,
     args.user,
     args.password,
-    args.database
+    args.database,
+    args.system
   );
   return response;
 });
