@@ -54,6 +54,14 @@ const storage = {
         return "Dados Salvos";
     },
 
+    async setCacheData(app, cache_data) {
+        console.log("Setting cache data...");
+        const { storage_cache_path } = this.getStoragePaths(app);
+        await fs.promises.writeFile(storage_cache_path, JSON.stringify(cache_data));
+        console.log("Salvo novos dados de cache");
+        return "Dados Salvos";
+    },
+
     async checkLocalStorageFiles(app) {
         console.log("Checking local storage files...");
         const { storage_server_path, storage_db_path, storage_cache_path } = this.getStoragePaths(app);
@@ -64,7 +72,7 @@ const storage = {
                 database: "geral",
                 system: "Ello",
             };
-            await fs.writeFile(storage_db_path, JSON.stringify(db_data));
+            await fs.promises.writeFile(storage_db_path, JSON.stringify(db_data));
         }
         if (!existsSync(storage_server_path)) {
             const server_data = {
@@ -72,11 +80,11 @@ const storage = {
                 password: "*",
                 server_url: "https://bi-smart-server.vercel.app/",
             };
-            await fs.writeFile(storage_server_path, JSON.stringify(server_data));
+            await fs.promises.writeFile(storage_server_path, JSON.stringify(server_data));
         }
         if (!existsSync(storage_cache_path)) {
             const cache = {};
-            await fs.writeFile(storage_cache_path, JSON.stringify(cache));
+            await fs.promises.writeFile(storage_cache_path, JSON.stringify(cache));
         }
     }
 }

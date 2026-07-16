@@ -1,7 +1,8 @@
 const { app, BrowserWindow, ipcMain, Tray, Menu } = require("electron");
 const { autoUpdater } = require("electron-updater");
-const { Ello } = require("./scripts/integrations/ello.js");
-const { Acesse } = require("./scripts/integrations/acesse.js");
+const Server = require("./scripts/server.js");
+const Ello = require("./scripts/integrations/ello.js");
+const Acesse = require("./scripts/integrations/acesse.js");
 const storage = require("./scripts/storage.js");
 const log = require("electron-log");
 let tray = null;
@@ -95,15 +96,27 @@ ipcMain.handle("sendDataToServer", async (event, args) => {
   switch (system) {
     case "Ello":
       const ello = new Ello();
-      const ello_data = await ello.getLocalData(args.data_inicio, args.data_fim);
-      const ello_response = await server.sendDataToServer(ello_data);
-      return ello_response;
+      const ello_data_arr = await ello.getLocalData(
+        args.data_inicio,
+        args.data_fim,
+      );
+      for (const data of ello_data_arr) {
+        const ello_response = await server.sendDataToServer(data);
+        console.log("Dados enviados: ", ello_response);
+      }
+      return "";
       break;
     case "Acesse":
       const acesse = new Acesse();
-      const acesse_data = await acesse.getLocalData(args.data_inicio, args.data_fim);
-      const acesse_response = await server.sendDataToServer(acesse_data);
-      return acesse_response;
+      const acesse_data_arr = await acesse.getLocalData(
+        args.data_inicio,
+        args.data_fim,
+      );
+      for (const data of acesse_data_arr) {
+        const acesse_response = await server.sendDataToServer(data);
+        console.log("Dados enviados: ", acesse_response);
+      }
+      return "";
       break;
     default:
       return "Sistema não suportado. Cheque as configurações do banco de dados.";
@@ -122,7 +135,7 @@ ipcMain.handle("setDBLogin", async (event, args) => {
     args.user,
     args.password,
     args.database,
-    args.system
+    args.system,
   );
   return response;
 });
