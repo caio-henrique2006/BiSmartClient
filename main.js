@@ -91,29 +91,33 @@ ipcMain.handle("getInfo", async (event, args) => {
 ipcMain.handle("sendDataToServer", async (event, args) => {
   const db_info = await storage.getDBInfo();
   const system = db_info.system;
-  switch (system) {
-    case "Ello":
-      const ello = new Ello();
-      const ello_data_arr = await ello.getLocalData(
-        args.data_inicio,
-        args.data_fim,
-      );
-      const ello_response = await handleEvent.sendDataToServer(ello_data_arr);
-      return ello_response;
-      break;
-    case "Acesse":
-      const acesse = new Acesse();
-      await acesse.init();
-      const acesse_data_arr = await acesse.getLocalData(
-        args.data_inicio,
-        args.data_fim,
-      );
-      const acesse_response = await handleEvent.sendDataToServer(acesse_data_arr);
-      return acesse_response;
-      break;
-    default:
-      return "Sistema não suportado. Cheque as configurações do banco de dados.";
-      break;
+  try {
+    switch (system) {
+      case "Ello":
+        const ello = new Ello();
+        const ello_data_arr = await ello.getLocalData(
+          args.data_inicio,
+          args.data_fim,
+        );
+        const ello_response = await handleEvent.sendDataToServer(ello_data_arr);
+        return ello_response;
+        break;
+      case "Acesse":
+        const acesse = new Acesse();
+        await acesse.init();
+        const acesse_data_arr = await acesse.getLocalData(
+          args.data_inicio,
+          args.data_fim,
+        );
+        const acesse_response = await handleEvent.sendDataToServer(acesse_data_arr);
+        return acesse_response;
+        break;
+      default:
+        return "Sistema não suportado. Cheque as configurações do banco de dados.";
+        break;
+    }
+  } catch (e) {
+    return "Erro ao enviar dados para o servidor: " + e;
   }
 });
 
