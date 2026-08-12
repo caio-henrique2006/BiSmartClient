@@ -1,9 +1,10 @@
+const { app } = require("electron");
 const path = require("node:path");
 const fs = require("fs");
 const { existsSync } = require("node:fs");
 
 const storage = {
-    getStoragePaths(app) {
+    getStoragePaths() {
         const path_userData = app.getPath("userData");
         const storage_server_path = path.join(path_userData, "server_login.json");
         const storage_db_path = path.join(path_userData, "db_login.json");
@@ -11,19 +12,19 @@ const storage = {
         return { storage_server_path, storage_db_path, storage_cache_path }
     },
 
-    async getServerInfo(app) {
+    async getServerInfo() {
         const { storage_server_path, storage_db_path } = this.getStoragePaths(app);
         const server_info = JSON.parse(await fs.promises.readFile(storage_server_path, "utf-8"));
         return server_info;
     },
 
-    async getDBInfo(app) {
+    async getDBInfo() {
         const { storage_server_path, storage_db_path } = this.getStoragePaths(app);
         const db_info = JSON.parse(await fs.promises.readFile(storage_db_path, "utf-8"));
         return db_info;
     },
 
-    async setDBInfo(app, user, password, database, system) {
+    async setDBInfo(user, password, database, system) {
         console.log("Setting DB login data...");
         const { storage_db_path } = this.getStoragePaths(app);
         try {
@@ -42,7 +43,7 @@ const storage = {
         return "Dados Salvos";
     },
 
-    async setServerInfo(app, email, password) {
+    async setServerInfo(email, password) {
         console.log("Setting server login data...");
         const { storage_server_path } = this.getStoragePaths(app);
         const current_server_data = await this.getServerInfo(app);
@@ -54,7 +55,7 @@ const storage = {
         return "Dados Salvos";
     },
 
-    async setCacheData(app, cache_data) {
+    async setCacheData(cache_data) {
         console.log("Setting cache data...");
         const { storage_cache_path } = this.getStoragePaths(app);
         await fs.promises.writeFile(storage_cache_path, JSON.stringify(cache_data));
@@ -62,7 +63,7 @@ const storage = {
         return "Dados Salvos";
     },
 
-    async checkLocalStorageFiles(app) {
+    async checkLocalStorageFiles() {
         console.log("Checking local storage files...");
         const { storage_server_path, storage_db_path, storage_cache_path } = this.getStoragePaths(app);
         if (!existsSync(storage_db_path)) {

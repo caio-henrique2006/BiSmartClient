@@ -1,6 +1,5 @@
 const fs = require("fs").promises;
 const path = require("node:path");
-const DB = require("./db.js");
 const Server = require("./server.js");
 const util = require("./util.js");
 const { existsSync } = require("node:fs");
@@ -27,16 +26,8 @@ class Event {
     this.cache_file_path = path.join(this.userData_path, "cache.json");
   }
 
-  async sendDataToServer(data_inicio, data_fim, cache_data = false) {
-    console.log("Sending data to server...");
-    const db = new DB();
+  async sendDataToServer(data_arr) {
     const server = new Server();
-    let data_arr;
-    if (cache_data) {
-      data_arr = cache_data;
-    } else {
-      data_arr = await db.getData(data_inicio, data_fim);
-    }
     let response = "Erro no banco de dados. Cheque os dados de conexão";
     for (const data of data_arr) {
       response = await server.sendDataToServer(data);

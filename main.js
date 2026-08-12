@@ -37,7 +37,6 @@ autoUpdater.on("error", (err) => {
 const fs = require("fs").promises;
 const path = require("node:path");
 const Event = require("./scripts/Event.js");
-const DB = require("./scripts/db.js");
 
 let win = null;
 let exiting = false;
@@ -83,15 +82,14 @@ const createWindow = async () => {
 
 // Serviços
 ipcMain.handle("getInfo", async (event, args) => {
-  const server_info = await storage.getServerInfo(app);
-  const db_info = await storage.getDBInfo(app);
+  const server_info = await storage.getServerInfo();
+  const db_info = await storage.getDBInfo();
   const response = { ...server_info, ...db_info };
   return response;
 });
 
 ipcMain.handle("sendDataToServer", async (event, args) => {
-  const server = new Server();
-  const db_info = await storage.getDBInfo(app);
+  const db_info = await storage.getDBInfo();
   const system = db_info.system;
   switch (system) {
     case "Ello":
@@ -100,23 +98,18 @@ ipcMain.handle("sendDataToServer", async (event, args) => {
         args.data_inicio,
         args.data_fim,
       );
-      for (const data of ello_data_arr) {
-        const ello_response = await server.sendDataToServer(data);
-        console.log("Dados enviados: ", ello_response);
-      }
-      return "";
+      const ello_response = await handleEvent.sendDataToServer(ello_data_arr);
+      return ello_response;
       break;
     case "Acesse":
       const acesse = new Acesse();
+      await acesse.init();
       const acesse_data_arr = await acesse.getLocalData(
         args.data_inicio,
         args.data_fim,
       );
-      for (const data of acesse_data_arr) {
-        const acesse_response = await server.sendDataToServer(data);
-        console.log("Dados enviados: ", acesse_response);
-      }
-      return "";
+      const acesse_response = await handleEvent.sendDataToServer(acesse_data_arr);
+      return acesse_response;
       break;
     default:
       return "Sistema não suportado. Cheque as configurações do banco de dados.";
@@ -125,13 +118,12 @@ ipcMain.handle("sendDataToServer", async (event, args) => {
 });
 
 ipcMain.handle("setLogin", async (event, args) => {
-  const response = await storage.setServerInfo(app, args.email, args.password);
+  const response = await storage.setServerInfo(args.email, args.password);
   return response;
 });
 
 ipcMain.handle("setDBLogin", async (event, args) => {
   const response = await storage.setDBInfo(
-    app,
     args.user,
     args.password,
     args.database,
