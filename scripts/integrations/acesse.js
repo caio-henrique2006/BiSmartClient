@@ -61,17 +61,17 @@ class Acesse {
 
   async fetchDataOnLocalDb(parameters) {
     
-    }
+  }
 
-    async executeQuery(query, parameters) {
-      try {
-        const result = await this.pool.query(query, parameters);
-        return result.rows;
-      } catch (e) {
-        console.log("Erro ao executar query: ", e);
-        return [];
-      }
+  async executeQuery(query, parameters) {
+    try {
+      const result = await this.pool.query(query, parameters);
+      return result.rows;
+    } catch (e) {
+      console.log("Erro ao executar query: ", e);
+      return [];
     }
+  }
 
 }
 
