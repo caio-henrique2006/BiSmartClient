@@ -4,7 +4,20 @@ const handleDate = require("../handleDate.js");
 
 class Acesse {
     SQL_Commands = {
-        getClientes: "SELECT * FROM cliente;"
+        getClientes: "SELECT * FROM cliente;",
+        getVendasConsumidor: `SELECT SUM(svc.valor_total_itens::float) AS valor_vendas FROM saida_venda_consumidor svc 
+        INNER JOIN (SELECT sc.numero_controle, SUM(vcp.valor_pagamento - vcp.valor_troco) 
+        as total_unitario FROM saida_venda_consumidor sc INNER JOIN venda_consumidor_pagamento 
+        vcp ON sc.numero_controle = vcp.numero_controle INNER JOIN lancamento la ON 
+        vcp.codigo_lancamento = la.codigo WHERE sc.flag_processamento = -1 AND 
+        sc.data_cancelamento IS NULL AND vcp.data_cancelamento IS NULL AND 
+        sc.data_documento >= $1 AND sc.data_documento <= $2 
+        GROUP BY sc.numero_controle) tmp ON svc.numero_controle = tmp.numero_controle 
+        INNER JOIN documento doc ON svc.codigo_documento = doc.codigo 
+        LEFT JOIN cliente cl ON svc.codigo_cliente = cl.codigo WHERE 
+        svc.flag_processamento = -1 AND svc.data_documento >= $3 AND 
+        svc.data_documento <= $4 
+        GROUP BY svc.data_documento;`
     };
   db_info;
   server_info;
@@ -17,8 +30,6 @@ class Acesse {
   }
 
   async getLocalData(data_inicio, data_fim) {
-    const response = await this.executeQuery(this.SQL_Commands.getClientes, []);
-    console.log(response);
     try {
       if (handleDate.checkDate(data_inicio, data_fim)) {
         let data_arr = [];
@@ -58,15 +69,31 @@ class Acesse {
     }
   }
 
-  async fetchDataOnLocalDb() {
-    const clientes = await this.executeQuery(this.SQL_Commands.getClientes, []);
-    console.log("Clientes: ", clientes);
+  async fetchDataOnLocalDb(date_arr) {
+    // const clientes = await this.executeQuery(this.SQL_Commands.getClientes, []);
+    // console.log("Clientes: ", clientes);
+    const valor_vendas = await this.executeQuery("valor_vendas", this.SQL_Commands.getVendasConsumidor,
+      date_arr, { repeat_parameters: true });
+    console.log("Valor Vendas: ", valor_vendas);
+    const data = Object.assign(
+      {},
+      valor_vendas,
+      {
+        data: date_arr[0],
+      }
+    );
+    return data;
   }
 
-  async executeQuery(query, parameters) {
+  async executeQuery(label, query, parameters, config = {}) {
     try {
-      const result = await this.pool.query(query, parameters);
-      return result.rows;
+      if (config.repeat_parameters) {
+        parameters = [...parameters, ...parameters];
+      }
+      const response = await this.pool.query(query, parameters);
+      const object = response.rows[0];
+      if (object) return object;
+      else return {[label]: 0.0000};
     } catch (e) {
       console.log("Erro ao executar query: ", e);
       return [];

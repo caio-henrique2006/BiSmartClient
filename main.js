@@ -101,7 +101,6 @@ ipcMain.handle("sendDataToServer", async (event, args) => {
         );
         const ello_response = await handleEvent.sendDataToServer(ello_data_arr);
         return ello_response;
-        break;
       case "Acesse":
         const acesse = new Acesse();
         await acesse.init();
@@ -111,10 +110,8 @@ ipcMain.handle("sendDataToServer", async (event, args) => {
         );
         const acesse_response = await handleEvent.sendDataToServer(acesse_data_arr);
         return acesse_response;
-        break;
       default:
         return "Sistema não suportado. Cheque as configurações do banco de dados.";
-        break;
     }
   } catch (e) {
     return "Erro ao enviar dados para o servidor: " + e;
