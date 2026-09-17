@@ -1,16 +1,89 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-br">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>BiSmart Clientes</title>
-    <link rel="stylesheet" href="./style.css" />
+    <link rel="stylesheet" href="./style/style.css" />
   </head>
+
   <body>
     <header>
       <img src="../public/images/logo.png" width="250px" />
-      <p class="main_title">BISMART CLIENTES</p>
     </header>
+    <!-- Login BISmart -->
+    <div class="card">
+      <div class="card_title">Login BISmart</div>
+      <div class="card_content">
+        <div class="input_container">
+          <label class="label">Email:</label>
+          <input type="email" class="input_text" />
+        </div>
+        <div class="input_container">
+          <label class="label">Senha:</label>
+          <input type="password" class="input_text" />
+        </div>
+
+        <div class="button_confirm">Salvar</div>
+      </div>
+    </div>
+    <!-- Banco de dados -->
+    <div class="card">
+      <div class="card_title">Bancos de dados</div>
+      <div class="card_content">
+        <div class="db_card">
+          <div class="db_card_content">
+            <label class="label">User:</label>
+            <input type="text" class="input_text" />
+            <label class="label">Senha:</label>
+            <input type="password" class="input_text" />
+            <label class="label">Banco de dados:</label>
+            <input type="text" class="input_text" />
+            <label class="label">Sistema:</label>
+            <input type="text" class="input_text" />
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Testes -->
+    <div class="card">
+      <div class="card_title">Testes</div>
+      <div class="card_content">
+        <div class="label">Testar conexão com o servidor</div>
+        <div class="button_confirm">Testar</div>
+        <div class="status"></div>
+        <div class="label">Testar conexão com o banco de dados</div>
+        <div class="button_confirm">Testar</div>
+        <div class="status"></div>
+      </div>
+    </div>
+    <!-- Configurações -->
+    <div class="card">
+      <div class="card_title">Configurações</div>
+      <div class="card_content">
+        <div class="config_item">
+          <input type="checkbox" id="config1" />
+          <label class="label_config">Configuração 1</label>
+          <input type="checkbox" id="config1" />
+          <label class="label_config">Configuração 1</label>
+          <input type="checkbox" id="config1" />
+          <label class="label_config">Configuração 1</label>
+        </div>
+      </div>
+    </div>
+    <!-- Status -->
+    <div class="card_footer">
+      <div class="card_title">Testes</div>
+      <div class="card_content">
+        <label class="label">Forçar envio de dados</label>
+        <div>
+          <input type="date" id="forceSend_data" />
+          <div class="button_confirm">Enviar</div>
+        </div>
+        <div class="status"></div>
+      </div>
+    </div>
+
     <div class="card">
       <p class="title">Ferramentas:</p>
       <label>Forçar envio dos dados para o servidor</label>
@@ -41,39 +114,39 @@
     </div>
     <script>
       async function run() {
-        const response = await window.db.invoke("getInfo", "");
-        document.getElementById("login_email").innerHTML =
-          "<b>Email:</b> " + response.email;
-        document.getElementById("login_password").innerHTML =
-          "<b>Senha:</b> *******";
-        document.getElementById("DB_user").innerHTML =
-          "<b>User:</b> " + response.user;
-        document.getElementById("DB_password").innerHTML =
-          "<b>Senha:</b> *******";
-        document.getElementById("DB_database").innerHTML =
-          "<b>Banco de dados:</b> " + response.database;
-        document.getElementById("DB_sistema").innerHTML =
-          "<b>Sistema:</b> " + response.system;
+        const response = await window.db.invoke('getInfo', '');
+        document.getElementById('login_email').innerHTML =
+          '<b>Email:</b> ' + response.email;
+        document.getElementById('login_password').innerHTML =
+          '<b>Senha:</b> *******';
+        document.getElementById('DB_user').innerHTML =
+          '<b>User:</b> ' + response.user;
+        document.getElementById('DB_password').innerHTML =
+          '<b>Senha:</b> *******';
+        document.getElementById('DB_database').innerHTML =
+          '<b>Banco de dados:</b> ' + response.database;
+        document.getElementById('DB_sistema').innerHTML =
+          '<b>Sistema:</b> ' + response.system;
       }
       document
-        .getElementById("submit_sendData")
-        .addEventListener("click", async () => {
-          document.getElementById("status").innerText = "Enviando...";
-          const response = await window.db.invoke("sendDataToServer", {
-            data_inicio: document.getElementById("sendData_data_inicio").value,
-            data_fim: document.getElementById("sendData_data_fim").value,
+        .getElementById('submit_sendData')
+        .addEventListener('click', async () => {
+          document.getElementById('status').innerText = 'Enviando...';
+          const response = await window.db.invoke('sendDataToServer', {
+            data_inicio: document.getElementById('sendData_data_inicio').value,
+            data_fim: document.getElementById('sendData_data_fim').value,
           });
           if (response) {
-            document.getElementById("status").innerText = response;
+            document.getElementById('status').innerText = response;
           } else {
-            document.getElementById("status").innerText = "Erro...";
+            document.getElementById('status').innerText = 'Erro...';
           }
         });
-      document.getElementById("editar_login").addEventListener("click", () => {
-        window.location.href = "update_login.html";
+      document.getElementById('editar_login').addEventListener('click', () => {
+        window.location.href = 'update_login.html';
       });
-      document.getElementById("editar_DB").addEventListener("click", () => {
-        window.location.href = "update_db.html";
+      document.getElementById('editar_DB').addEventListener('click', () => {
+        window.location.href = 'update_db.html';
       });
       run();
     </script>

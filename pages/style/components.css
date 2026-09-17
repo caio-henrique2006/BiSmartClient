@@ -1,0 +1,72 @@
+/* Cards */
+.card {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  padding: 16px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  align-self: stretch;
+  background: var(--card-background-color);
+  box-shadow: var(--card-shadow);
+}
+.card_content {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  padding: 6px;
+  box-sizing: border-box;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.db_card {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  padding: 6px;
+  box-sizing: border-box;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  flex-shrink: 0;
+  align-self: stretch;
+}
+.db_card_content {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  padding: 6px;
+  box-sizing: border-box;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+/* Buttons */
+.button_confirm {
+  font-family: 'Poppins', sans-serif;
+  color: var(--text-color);
+  font-size: 14px;
+  display: flex;
+  padding: 4px 12px;
+  align-items: flex-start;
+  background: var(--primary-color);
+  box-shadow: var(--button-shadow);
+}
+/* Inputs */
+.input_container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+.input_text {
+  width: 100%;
+  padding: 8px 4px;
+  align-self: stretch;
+  border: 1px solid #d3d3d3;
+  box-sizing: border-box;
+  background: var(--card-background-color);
+}

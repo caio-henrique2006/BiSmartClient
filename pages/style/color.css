@@ -1,0 +1,8 @@
+:root {
+  --primary-color: #1cb2ef;
+  --background-color: #ebebeb;
+  --card-background-color: #faf9f6;
+  --text-color: #000000;
+  --card-shadow: 2px 2px 4px 0px #0000004a;
+  --button-shadow: 1px 1px 2px 0px #0000004a;
+}

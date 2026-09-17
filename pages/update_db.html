@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-br">
   <head>
     <meta charset="UTF-8" />
@@ -26,34 +26,34 @@
     <button id="voltar">Voltar</button>
     <script>
       async function run() {
-        const response = await window.db.invoke("getInfo", "");
-        document.getElementById("set_db_user").value = response.user;
-        document.getElementById("set_db_password").value = "*********";
-        document.getElementById("set_db_database").value = response.database;
-        document.getElementById("set_db_system").value = response.system;
+        const response = await window.db.invoke('getInfo', '');
+        document.getElementById('set_db_user').value = response.user;
+        document.getElementById('set_db_password').value = '*********';
+        document.getElementById('set_db_database').value = response.database;
+        document.getElementById('set_db_system').value = response.system;
       }
       document
-        .getElementById("submit_set_localdb")
-        .addEventListener("click", async () => {
-          const user = document.getElementById("set_db_user").value;
-          const password = document.getElementById("set_db_password").value;
-          const database = document.getElementById("set_db_database").value;
-          const system = document.getElementById("set_db_system").value;
+        .getElementById('submit_set_localdb')
+        .addEventListener('click', async () => {
+          const user = document.getElementById('set_db_user').value;
+          const password = document.getElementById('set_db_password').value;
+          const database = document.getElementById('set_db_database').value;
+          const system = document.getElementById('set_db_system').value;
           console.log(user, password, database, system);
-          const response = await window.db.invoke("setDBLogin", {
+          const response = await window.db.invoke('setDBLogin', {
             user: user,
             password: password,
             database: database,
             system: system,
           });
           if (response) {
-            window.location.href = "index.html";
+            window.location.href = 'index.html';
           } else {
-            alert("Erro Salvando os dados");
+            alert('Erro Salvando os dados');
           }
         });
-      document.getElementById("voltar").addEventListener("click", () => {
-        window.location.href = "index.html";
+      document.getElementById('voltar').addEventListener('click', () => {
+        window.location.href = 'index.html';
       });
       run();
     </script>
