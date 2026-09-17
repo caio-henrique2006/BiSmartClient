@@ -108,6 +108,7 @@ ipcMain.handle("sendDataToServer", async (event, args) => {
           args.data_inicio,
           args.data_fim,
         );
+        console.log("Simulando envio: ", acesse_data_arr);
         const acesse_response = await handleEvent.sendDataToServer(acesse_data_arr);
         return acesse_response;
       default:
