@@ -6,149 +6,128 @@
     <title>BiSmart Clientes</title>
     <link rel="stylesheet" href="./style/style.css" />
   </head>
-
   <body>
-    <header>
-      <img src="../public/images/logo.png" width="250px" />
-    </header>
-    <!-- Login BISmart -->
-    <div class="card">
-      <div class="card_title">Login BISmart</div>
-      <div class="card_content">
-        <div class="input_container">
-          <label class="label">Email:</label>
-          <input type="email" class="input_text" />
-        </div>
-        <div class="input_container">
-          <label class="label">Senha:</label>
-          <input type="password" class="input_text" />
-        </div>
+    <main class="app_shell">
+      <header class="app_header">
+        <img
+          class="brand_logo"
+          src="../public/images/logo.png"
+          alt="Smart programas para empresas"
+        />
+      </header>
 
-        <div class="button_confirm">Salvar</div>
-      </div>
-    </div>
-    <!-- Banco de dados -->
-    <div class="card">
-      <div class="card_title">Bancos de dados</div>
-      <div class="card_content">
-        <div class="db_card">
-          <div class="db_card_content">
-            <label class="label">User:</label>
-            <input type="text" class="input_text" />
-            <label class="label">Senha:</label>
-            <input type="password" class="input_text" />
-            <label class="label">Banco de dados:</label>
-            <input type="text" class="input_text" />
-            <label class="label">Sistema:</label>
-            <input type="text" class="input_text" />
+      <section class="settings_stack" aria-label="Configurações do aplicativo">
+        <article class="card login_card">
+          <h1 class="card_title">Login BISmart</h1>
+          <div class="card_content">
+            <div class="input_container">
+              <label class="field_label" for="login_email_input">Email</label>
+              <input id="login_email_input" class="text_input" type="email" />
+            </div>
+            <div class="input_container">
+              <label class="field_label" for="login_password_input"
+                >Senha</label
+              >
+              <input
+                id="login_password_input"
+                class="text_input"
+                type="password"
+              />
+            </div>
+            <button class="action_button" type="button">Salvar</button>
           </div>
-        </div>
-      </div>
-    </div>
-    <!-- Testes -->
-    <div class="card">
-      <div class="card_title">Testes</div>
-      <div class="card_content">
-        <div class="label">Testar conexão com o servidor</div>
-        <div class="button_confirm">Testar</div>
-        <div class="status"></div>
-        <div class="label">Testar conexão com o banco de dados</div>
-        <div class="button_confirm">Testar</div>
-        <div class="status"></div>
-      </div>
-    </div>
-    <!-- Configurações -->
-    <div class="card">
-      <div class="card_title">Configurações</div>
-      <div class="card_content">
-        <div class="config_item">
-          <input type="checkbox" id="config1" />
-          <label class="label_config">Configuração 1</label>
-          <input type="checkbox" id="config1" />
-          <label class="label_config">Configuração 1</label>
-          <input type="checkbox" id="config1" />
-          <label class="label_config">Configuração 1</label>
-        </div>
-      </div>
-    </div>
-    <!-- Status -->
-    <div class="card_footer">
-      <div class="card_title">Testes</div>
-      <div class="card_content">
-        <label class="label">Forçar envio de dados</label>
-        <div>
-          <input type="date" id="forceSend_data" />
-          <div class="button_confirm">Enviar</div>
-        </div>
-        <div class="status"></div>
-      </div>
-    </div>
+        </article>
 
-    <div class="card">
-      <p class="title">Ferramentas:</p>
-      <label>Forçar envio dos dados para o servidor</label>
-      <input type="date" id="sendData_data_inicio" />
-      <input type="date" id="sendData_data_fim" />
-      <button id="submit_sendData">Enviar</button>
-      <p id="status"></p>
-    </div>
-    <br />
-    <div class="card">
-      <p class="title">Dados de login:</p>
-      <br />
-      <p id="login_email"></p>
-      <p id="login_password"></p>
-      <br />
-      <button id="editar_login">Editar</button>
-    </div>
-    <br />
-    <div class="card">
-      <p class="title">Dados do banco de dados local:</p>
-      <br />
-      <p id="DB_user"></p>
-      <p id="DB_password"></p>
-      <p id="DB_database"></p>
-      <p id="DB_sistema"></p>
-      <br />
-      <button id="editar_DB">Editar</button>
-    </div>
-    <script>
-      async function run() {
-        const response = await window.db.invoke('getInfo', '');
-        document.getElementById('login_email').innerHTML =
-          '<b>Email:</b> ' + response.email;
-        document.getElementById('login_password').innerHTML =
-          '<b>Senha:</b> *******';
-        document.getElementById('DB_user').innerHTML =
-          '<b>User:</b> ' + response.user;
-        document.getElementById('DB_password').innerHTML =
-          '<b>Senha:</b> *******';
-        document.getElementById('DB_database').innerHTML =
-          '<b>Banco de dados:</b> ' + response.database;
-        document.getElementById('DB_sistema').innerHTML =
-          '<b>Sistema:</b> ' + response.system;
-      }
-      document
-        .getElementById('submit_sendData')
-        .addEventListener('click', async () => {
-          document.getElementById('status').innerText = 'Enviando...';
-          const response = await window.db.invoke('sendDataToServer', {
-            data_inicio: document.getElementById('sendData_data_inicio').value,
-            data_fim: document.getElementById('sendData_data_fim').value,
-          });
-          if (response) {
-            document.getElementById('status').innerText = response;
-          } else {
-            document.getElementById('status').innerText = 'Erro...';
-          }
-        });
-      document.getElementById('editar_login').addEventListener('click', () => {
-        window.location.href = 'update_login.html';
-      });
-      document.getElementById('editar_DB').addEventListener('click', () => {
-        window.location.href = 'update_db.html';
-      });
-      run();
-    </script>
+        <article class="card database_card">
+          <h2 class="card_title">Bancos de dados</h2>
+          <div class="card_content">
+            <div class="database_summary">
+              <div class="database_summary_header">
+                <span class="database_name">Nome Banco</span>
+                <button
+                  class="icon_button"
+                  type="button"
+                  aria-label="Editar banco de dados"
+                >
+                  &#9998;
+                </button>
+              </div>
+              <p><span class="summary_key">User:</span> root</p>
+              <p><span class="summary_key">Banco de dados:</span> GERBD</p>
+              <p><span class="summary_key">Sistema:</span> Acesse</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="card tests_card">
+          <h2 class="card_title">Ações</h2>
+          <div class="card_content tests_content">
+            <div class="test_item">
+              <label class="field_label" for="server_test_input"
+                >Testar conexão com o servidor</label
+              >
+              <output class="status_output" aria-live="polite"></output>
+              <button class="action_button" type="button">Testar</button>
+            </div>
+            <div class="test_item">
+              <label class="field_label" for="database_test_input"
+                >Testar conexão com o banco de dados</label
+              >
+              <output class="status_output" aria-live="polite"></output>
+              <button class="action_button" type="button">Testar</button>
+            </div>
+            <div class="test_item">
+              <label class="field_label" for="send_data_test_input"
+                >Forçar envio de dados</label
+              >
+              <div class="status_action_row">
+                <input
+                  id="force_send_date"
+                  class="text_input date_input"
+                  type="date"
+                />
+                -
+                <input
+                  id="force_send_date"
+                  class="text_input date_input"
+                  type="date"
+                />
+              </div>
+              <output class="status_output" aria-live="polite"></output>
+              <button class="action_button" type="button">Enviar</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="card configuration_card">
+          <h2 class="card_title">Configurações</h2>
+          <div class="card_content configuration_list">
+            <label class="checkbox_field"
+              ><input type="checkbox" />
+              <span>Enviar dados automaticamente para o servidor</span></label
+            >
+            <label class="checkbox_field"
+              ><input type="checkbox" />
+              <span>Enviar dados automaticamente para o servidor</span></label
+            >
+            <label class="checkbox_field"
+              ><input type="checkbox" />
+              <span>Enviar dados automaticamente para o servidor</span></label
+            >
+            <label class="checkbox_field"
+              ><input type="checkbox" />
+              <span>Enviar dados automaticamente para o servidor</span></label
+            >
+          </div>
+        </article>
+      </section>
+
+      <section class="status_section" aria-labelledby="status_title">
+        <h2 id="status_title" class="card_title">Status</h2>
+        <div class="status_content">
+          <output class="status_log" aria-live="polite"></output>
+        </div>
+      </section>
+    </main>
   </body>
 </html>

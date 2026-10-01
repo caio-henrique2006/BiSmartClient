@@ -5,18 +5,79 @@
 @font-face {
   font-family: 'Poppins';
   src: url('../../public/fonts/Poppins/Poppins-Regular.ttf') format('ttf');
-  font-weight: 400;
+  font-weight: 500;
   font-style: normal;
   font-display: swap;
 }
 
 body {
-  display: flex;
-  width: 400px;
-  height: 800px;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  padding: 12px;
+  min-width: 280px;
+  min-height: 100vh;
+  margin: 0;
   background-color: var(--background-color);
+  font-family: 'Poppins', sans-serif;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+.app_shell {
+  width: min(100%, 420px);
+  box-sizing: border-box;
+  margin: 0 auto;
+  padding: 20px 10px 0;
+}
+
+.app_header {
+  display: flex;
+  justify-content: center;
+  padding: 0 0 18px;
+}
+
+.brand_logo {
+  width: min(250px, 72vw);
+  height: auto;
+}
+
+.settings_stack {
+  display: grid;
+  gap: 8px;
+}
+
+.status_section {
+  margin: 8px -10px 0;
+  padding: 10px;
+  background: var(--card-background-color);
+}
+
+.status_content {
+  padding: 6px 10px 0;
+}
+
+.status_action_row {
+  width: 100%;
+  justify-content: flex-start;
+}
+
+.date_input {
+  flex: 1;
+}
+
+.status_log {
+  min-height: 120px;
+  margin-top: 6px;
+  border: 1px solid #d3d3d3;
+  background: var(--card-background-color);
+}
+
+@media (min-width: 600px) {
+  .app_shell {
+    padding-top: 28px;
+  }
+
+  .status_log {
+    min-height: 180px;
+  }
 }
