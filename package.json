@@ -5,9 +5,12 @@
   "description": "BISMART versão para clientes",
   "main": "main.js",
   "scripts": {
-    "dev": "electronmon .",
+    "dev:renderer": "vite --host localhost",
+    "dev:electron": "wait-on http://localhost:5173 && electronmon .",
+    "dev": "concurrently -k \"npm run dev:renderer\" \"npm run dev:electron\"",
+    "build:renderer": "vite build",
     "start": "electron .",
-    "build": "electron-builder"
+    "build": "npm run build:renderer && electron-builder"
   },
   "build": {
     "appId": "com.smart.bismartclient",
@@ -62,9 +65,13 @@
     "@electron-forge/plugin-auto-unpack-natives": "^7.8.0",
     "@electron-forge/plugin-fuses": "^7.8.0",
     "@electron/fuses": "^1.8.0",
+    "@vitejs/plugin-react": "^6.1.1",
+    "concurrently": "^10.0.5",
     "electron": "^33.2.1",
     "electron-builder": "^26.0.12",
-    "electronmon": "^2.0.4"
+    "electronmon": "^2.0.4",
+    "vite": "^8.3.1",
+    "wait-on": "^9.5.1"
   },
   "dependencies": {
     "date-fns": "^4.1.0",
@@ -74,6 +81,8 @@
     "mysql": "^2.18.1",
     "mysql2": "^3.12.0",
     "pg": "^8.22.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
     "update-electron-app": "^3.1.1"
   }
 }
